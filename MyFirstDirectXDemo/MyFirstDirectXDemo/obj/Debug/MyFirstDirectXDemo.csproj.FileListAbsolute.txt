@@ -1,0 +1,15 @@
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\obj\Debug\MyFirstDirectXDemo.csproj.AssemblyReference.cache
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\obj\Debug\MyFirstDirectXDemo.Properties.Resources.resources
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\obj\Debug\MyFirstDirectXDemo.csproj.GenerateResource.cache
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\obj\Debug\MyFirstDirectXDemo.csproj.CoreCompileInputs.cache
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\bin\Debug\MyFirstDirectXDemo.exe
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\bin\Debug\MyFirstDirectXDemo.pdb
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\bin\Debug\Microsoft.DirectX.Direct3D.dll
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\bin\Debug\Microsoft.DirectX.Direct3DX.dll
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\bin\Debug\Microsoft.DirectX.dll
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\bin\Debug\Microsoft.DirectX.xml
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\bin\Debug\Microsoft.DirectX.Direct3D.xml
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\bin\Debug\Microsoft.DirectX.Direct3DX.xml
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\obj\Debug\MyFirstDirectXDemo.csproj.CopyComplete
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\obj\Debug\MyFirstDirectXDemo.exe
+D:\Longtu\Graphic_Exercise\graphic_exercise\MyFirstDirectXDemo\MyFirstDirectXDemo\obj\Debug\MyFirstDirectXDemo.pdb
