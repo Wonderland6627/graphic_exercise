@@ -18,6 +18,12 @@ const char* fragmentShaderSource =	"#version 330 core\n"
 									"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 									"}\0";
 
+const char* fragmentShaderSource2 =	"#version 330 core\n"
+									"out vec4 FragColor;\n"
+									"void main()\n"
+									"{\n"
+									"	FragColor = vec4(0.0f, 1.0f, 0.2f, 1.0f);\n"
+									"}\0";
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -29,7 +35,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);//核心模式(Core-profile)
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "MyOpenGLWindow", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 800, "MyOpenGLWindow", NULL, NULL);
 	if (window == NULL)
 	{
 		cout << "Failed to create GLFW window" << endl;
@@ -80,6 +86,11 @@ int main()
 		cout << infoLog << endl;
 	}
 
+	unsigned int fragmentShader2;
+	fragmentShader2 = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader2, 1, &fragmentShaderSource2, NULL);
+	glCompileShader(fragmentShader2);
+
 #pragma endregion
 
 #pragma region 着色器链接对象
@@ -98,50 +109,79 @@ int main()
 		cout << infoLog << endl;
 	}
 
+	unsigned int shaderProgram2;
+	shaderProgram2 = glCreateProgram();
+	glAttachShader(shaderProgram2, vertexShader);
+	glAttachShader(shaderProgram2, fragmentShader2);
+	glLinkProgram(shaderProgram2);
+
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+	glDeleteShader(fragmentShader2);
 
 #pragma endregion
 
 #pragma region 顶点输入
 
-	float vertices[] = 
+	float vertices1[] =
 	{
-		 0.5f, 0.5f, 0.0f,   // 右上角
+		/*0.5f, 0.5f, 0.0f,   // 右上角
 		0.5f, -0.5f, 0.0f,  // 右下角
 		-0.5f, -0.5f, 0.0f, // 左下角
-		-0.5f, 0.5f, 0.0f   // 左上角
+		-0.5f, 0.5f, 0.0f   // 左上角*/
+
+		0,0,0,
+		0.5f, 0, 0,
+		0, 0.5f, 0,
+	};
+
+	float vertices2[] =
+	{
+		0.1f,0.1f,0,
+		0.6f, 0.1f, 0,
+		0.1f, 0.6f, 0,
 	};
 
 	unsigned int indices[] =
 	{
-		0, 1, 3, // 第一个三角形
-		1, 2, 3  // 第二个三角形
+		//0, 1, 2, // 第一个三角形
+		//1, 2, 3  // 第二个三角形
+		2,1,0,
+		2,0,3
 	};
 
-	unsigned int VAO;
-	unsigned int VBO;
+	unsigned int VAO[2];
+	unsigned int VBO[2];
 	unsigned int EBO;
 
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);//做绑定
+	glGenVertexArrays(2, VAO);
+	glGenBuffers(2, VBO);//做绑定
 	glGenBuffers(1, &EBO);
 
-	glBindVertexArray(VAO);
+	glBindVertexArray(VAO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);//把索引复制进缓冲
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-#pragma endregion
+	/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);//把索引复制进缓冲
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	glBindVertexArray(VAO[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+
+	/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);//把索引复制进缓冲
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+#pragma endregion
+
+	/*glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);*/
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -153,18 +193,23 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(VAO[0]);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glUseProgram(shaderProgram2);
+		glBindVertexArray(VAO[1]);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);//检测触发事件
 		glfwPollEvents();//交换颜色缓冲（双缓冲）
 	}
 
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+	glDeleteVertexArrays(2, VAO);
+	glDeleteBuffers(2, VBO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shaderProgram);
+	glDeleteProgram(shaderProgram2);
 
 	glfwTerminate();//释放资源
 
