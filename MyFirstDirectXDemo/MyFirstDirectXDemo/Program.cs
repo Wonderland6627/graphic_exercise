@@ -26,7 +26,8 @@ namespace MyFirstDirectXDemo
 
             while (basicForm.Created) //设置一个循环用于实时更新渲染状态
             {
-                basicForm.Render();
+                //basicForm.Render();
+                basicForm.RenderLine();
                 Application.DoEvents(); //处理键盘鼠标等输入事件
             }
         }

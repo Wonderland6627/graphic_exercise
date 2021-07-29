@@ -64,5 +64,23 @@ namespace MyFirstDirectXDemo
             device.EndScene();
             device.Present();
         }
+
+        public void RenderLine()
+        {
+            Vector2[] vecs = new Vector2[2];
+            vecs[0] = new Vector2(0, 0);
+            vecs[1] = new Vector2(100, 100);
+
+            device.Clear(ClearFlags.Target, Color.White, 1, 0);
+            device.BeginScene();
+
+            using (Line I = new Line(device))
+            {
+                I.Draw(vecs, Color.Red);
+            }
+
+            device.EndScene();
+            device.Present();
+        }
     }
 }
