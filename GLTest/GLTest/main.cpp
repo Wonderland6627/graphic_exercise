@@ -22,7 +22,9 @@ int main()
 
 		return -1;
 	}
+
 	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);//每当窗口改变大小，GLFW会调用这个函数
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))//初始化GLAD
 	{
@@ -31,12 +33,12 @@ int main()
 		return -1;
 	}
 
-	//glViewport(0, 0, 800, 600);//视口 前两个左下角位置 后两个宽高
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);//每当窗口改变大小，GLFW会调用这个函数
-
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
+
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		glfwSwapBuffers(window);//检测触发事件
 		glfwPollEvents();//交换颜色缓冲（双缓冲）
@@ -49,7 +51,7 @@ int main()
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) 
 {
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, width, height);//视口 前两个左下角位置 后两个宽高
 }
 
 void processInput(GLFWwindow* window)
