@@ -355,9 +355,10 @@ void GLTextureTestFunc()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);//绑定贴图
+	unsigned int texture1;
+
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);//绑定贴图
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -376,10 +377,38 @@ void GLTextureTestFunc()
 	}
 	else
 	{
-		cout << "Load Texture Failed" << endl;
+		cout << "Load Texture1 Failed" << endl;
 	}
 
 	stbi_image_free(data);
+
+	unsigned int texture2;
+
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width2;
+	int height2;
+	int nrChannels2;
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* data2 = stbi_load("D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Textures/awesomeface.png", &width2, &height2, &nrChannels2, 0);//加载贴图数据
+
+	if (data2)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
+		glGenerateMipmap(GL_TEXTURE_2D);//生成纹理
+	}
+	else
+	{
+		cout << "Load Texture2 Failed" << endl;
+	}
+
+	stbi_image_free(data2);
 	
 	string shaderPathSuffix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
 	string vertexShaderPath = shaderPathSuffix + "/TextureVertex.glsl";
@@ -389,6 +418,9 @@ void GLTextureTestFunc()
 	const GLchar* fragmentSPath = (GLchar*)(fragmentShaderPath.c_str());
 
 	Shader shader(vertexSPath, fragmentSPath);
+	shader.Use();
+	shader.SetUniformInt("texture1", 0);
+	shader.SetUniformInt("texture2", 1);
 
 	while (!glfwWindowShouldClose(window))//渲染循环
 	{
@@ -396,7 +428,10 @@ void GLTextureTestFunc()
 
 		ClearScreen();
 
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glActiveTexture(GL_TEXTURE0);//在绑定纹理之前先激活纹理单元 GL_TEXTURE0纹理单元默认总是被激活的
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		shader.Use();
 		glBindVertexArray(VAO);
