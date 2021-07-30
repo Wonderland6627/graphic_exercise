@@ -1,10 +1,14 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<iostream>
+#include<string>
+#include<algorithm>
 
 #include"shader.h"
 
 using namespace std;
+
+#pragma region GLTestConst
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
@@ -35,10 +39,42 @@ const char* fragmentShaderSource2 =	"#version 330 core\n"
 									"	FragColor = outColor;\n"
 									"}\0";
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
+#pragma endregion
+
+void Framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void ProcessInput(GLFWwindow* window);
+void ClearScreen();
+void GLTestFunc();
+void GLTextureTestFunc();
 
 int main() 
+{
+	//GLTestFunc();
+	GLTextureTestFunc();
+
+	return 0;
+}
+
+void Framebuffer_size_callback(GLFWwindow* window, int width, int height) 
+{
+	glViewport(0, 0, width, height);//视口 前两个左下角位置 后两个宽高
+}
+
+void ProcessInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
+}
+
+void ClearScreen()
+{
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void GLTestFunc()
 {
 	glfwInit();//初始化glfw
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);//设置版本号为3
@@ -51,17 +87,17 @@ int main()
 		cout << "Failed to create GLFW window" << endl;
 		glfwTerminate();
 
-		return -1;
+		return;
 	}
 
 	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);//每当窗口改变大小，GLFW会调用这个函数
+	glfwSetFramebufferSizeCallback(window, Framebuffer_size_callback);//每当窗口改变大小，GLFW会调用这个函数
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))//初始化GLAD
 	{
 		cout << "Failed to init GLAD" << endl;
 
-		return -1;
+		return;
 	}
 
 #pragma region 顶点着色器
@@ -107,13 +143,13 @@ int main()
 
 	unsigned int shaderProgram;
 	shaderProgram = glCreateProgram();//链接着色器对象，会把每一个着色器的输出链接到下一个着色器的输入。当输出和输入不匹配，则错误；
-	
+
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
 
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) 
+	if (!success)
 	{
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
 		cout << infoLog << endl;
@@ -202,18 +238,17 @@ int main()
 	string shaderPathSuffix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
 	string vertexShaderPath = shaderPathSuffix + "/vertexShader1.glsl";
 	string fragmentShaderPath = shaderPathSuffix + "/fragmentShader1.glsl";
-	
+
 	const GLchar* vertexSPath = (GLchar*)(vertexShaderPath.c_str());
 	const GLchar* fragmentSPath = (GLchar*)(fragmentShaderPath.c_str());
-	
+
 	Shader shader(vertexSPath, fragmentSPath);
 
 	while (!glfwWindowShouldClose(window))//渲染循环
 	{
-		processInput(window);
+		ProcessInput(window);
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		ClearScreen();
 
 		shader.Use();
 		shader.SetUniformFloat("offset", -0.5f);
@@ -242,18 +277,138 @@ int main()
 	glDeleteProgram(shaderProgram2);
 
 	glfwTerminate();//释放资源
-
-	return 0;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) 
-{
-	glViewport(0, 0, width, height);//视口 前两个左下角位置 后两个宽高
-}
+#define STB_IMAGE_IMPLEMENTATION
+#include"stb_image.h"
 
-void processInput(GLFWwindow* window)
+void GLTextureTestFunc()
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, true);
+	glfwInit();//初始化glfw
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);//设置版本号为3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);//核心模式(Core-profile)
+
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "MyOpenGLWindow", NULL, NULL);
+	if (window == NULL)
+	{
+		cout << "Failed to create GLFW window" << endl;
+		glfwTerminate();
+
+		return;
 	}
+
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, Framebuffer_size_callback);//每当窗口改变大小，GLFW会调用这个函数
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))//初始化GLAD
+	{
+		cout << "Failed to init GLAD" << endl;
+
+		return;
+	}
+
+	float texCoords[] =
+	{
+		0.0f, 0.0f, // 左下角
+		1.0f, 0.0f, // 右下角
+		0.5f, 1.0f // 上中
+	}; 
+
+	float vertices[] = 
+	{
+		//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+	};
+
+	unsigned int indices[] =
+	{
+		0,1,3,
+		1,2,3,
+	};
+
+	unsigned int VAO;
+	unsigned int VBO;
+	unsigned int EBO;
+
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	//位置属性
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+	//颜色属性
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	//贴图属性
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);//绑定贴图
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width;
+	int height;
+	int nrChannels;//颜色通道数
+	unsigned char* data = stbi_load("D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Textures/wall.jpg", &width, &height, &nrChannels, 0);//加载贴图数据
+
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);//生成纹理
+	}
+	else
+	{
+		cout << "Load Texture Failed" << endl;
+	}
+
+	stbi_image_free(data);
+	
+	string shaderPathSuffix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
+	string vertexShaderPath = shaderPathSuffix + "/TextureVertex.glsl";
+	string fragmentShaderPath = shaderPathSuffix + "/TextureFragment.glsl";
+
+	const GLchar* vertexSPath = (GLchar*)(vertexShaderPath.c_str());
+	const GLchar* fragmentSPath = (GLchar*)(fragmentShaderPath.c_str());
+
+	Shader shader(vertexSPath, fragmentSPath);
+
+	while (!glfwWindowShouldClose(window))//渲染循环
+	{
+		ProcessInput(window);
+
+		ClearScreen();
+
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+		shader.Use();
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glfwSwapBuffers(window);//交换颜色缓冲（双缓冲）
+		glfwPollEvents();//检测触发事件
+	}
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+
+	glfwTerminate();//释放资源
 }
