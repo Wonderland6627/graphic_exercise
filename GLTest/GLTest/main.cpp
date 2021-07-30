@@ -2,6 +2,8 @@
 #include<GLFW/glfw3.h>
 #include<iostream>
 
+#include"shader.h"
+
 using namespace std;
 
 const unsigned int SCR_WIDTH = 800;
@@ -175,8 +177,8 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 
-	/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);//把索引复制进缓冲
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
+	/*glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);*/
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
@@ -200,6 +202,15 @@ int main()
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	string shaderPathSuffix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
+	string vertexShaderPath = shaderPathSuffix + "/vertexShader1.glsl";
+	string fragmentShaderPath = shaderPathSuffix + "/fragmentShader1.glsl";
+	
+	const GLchar* vertexSPath = (GLchar*)(vertexShaderPath.c_str());
+	const GLchar* fragmentSPath = (GLchar*)(fragmentShaderPath.c_str());
+	
+	Shader shader(vertexSPath, fragmentSPath);
+
 	while (!glfwWindowShouldClose(window))//渲染循环
 	{
 		processInput(window);
@@ -207,12 +218,12 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shaderProgram);
+		shader.Use();
 		glBindVertexArray(VAO[0]);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		glUseProgram(shaderProgram2);
+		/*glUseProgram(shaderProgram2);
 
 		float timeValue = glfwGetTime();//运行的秒数
 		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
@@ -220,7 +231,7 @@ int main()
 		glUniform4f(vertexColorLocation, 0, greenValue, 0, 1);//更新uniform值，必须在更新之前UseProgram
 
 		glBindVertexArray(VAO[1]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 3);*/
 
 		glfwSwapBuffers(window);//交换颜色缓冲（双缓冲）
 		glfwPollEvents();//检测触发事件
