@@ -147,7 +147,7 @@ int main()
 		// 位置              // 颜色
 		0.5f, -0.5f, 0.0f,	 1.0f, 0.0f, 0.0f,   // 右下
 		-0.5f, -0.5f, 0.0f,	  0.0f, 1.0f, 0.0f,   // 左下
-		0.0f,  0.5f, 0.0f,	 0.0f, 0.0f, 1.0f    // 顶部
+		0.5f,  0.5f, 0.0f,	 0.0f, 0.0f, 1.0f    // 顶部
 	};
 
 	float vertices2[] =
@@ -176,9 +176,6 @@ int main()
 	glBindVertexArray(VAO[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
-
-	/*glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);*/
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
@@ -219,6 +216,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.Use();
+		shader.SetUniformFloat("offset", -0.5f);
 		glBindVertexArray(VAO[0]);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

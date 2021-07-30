@@ -115,10 +115,10 @@ public:
 			glUniform1i(location, value);
 		}
 
-		void SetUniformColor(const string& name, float r, float g, float b) const
+		void SetUniformFloat4(const string& name, float r, float g, float b, float a) const
 		{
 			int location = glGetUniformLocation(ID, name.c_str());
-			glUniform4f(location, r, g, b, 1);
+			glUniform4f(location, r, g, b, a);
 		}
 };
 
