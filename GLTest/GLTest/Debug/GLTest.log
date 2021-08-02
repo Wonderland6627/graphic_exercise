@@ -1,5 +1,5 @@
 ﻿  main.cpp
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(481,21): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(482,21): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(684,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(735,15): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(736,15): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
