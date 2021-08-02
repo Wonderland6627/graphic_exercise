@@ -421,6 +421,8 @@ void GLTextureTestFunc()
 	shader.Use();
 	shader.SetUniformInt("texture1", 0);
 	shader.SetUniformInt("texture2", 1);
+	float alpha = 0.1f;
+	shader.SetUniformFloat("alpha", alpha);
 
 	while (!glfwWindowShouldClose(window))//‰÷»æ—≠ª∑
 	{
@@ -434,6 +436,17 @@ void GLTextureTestFunc()
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		shader.Use();
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		{
+			alpha += 0.1f;
+			shader.SetUniformFloat("alpha", alpha);
+		}
+		else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		{
+			alpha -= 0.1f;
+			shader.SetUniformFloat("alpha", alpha);
+		}
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
