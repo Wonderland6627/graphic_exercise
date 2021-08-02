@@ -4,6 +4,10 @@
 #include<string>
 #include<algorithm>
 
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+
 #include"shader.h"
 
 using namespace std;
@@ -46,11 +50,13 @@ void ProcessInput(GLFWwindow* window);
 void ClearScreen();
 void GLTestFunc();
 void GLTextureTestFunc();
+void GLMTest();
 
 int main() 
 {
 	//GLTestFunc();
 	GLTextureTestFunc();
+	//GLMTest();
 
 	return 0;
 }
@@ -424,6 +430,12 @@ void GLTextureTestFunc()
 	float alpha = 0.1f;
 	shader.SetUniformFloat("alpha", alpha);
 
+	glm::mat4 trans;
+	trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0, 0, 1));
+	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
 	while (!glfwWindowShouldClose(window))//‰÷»æ—≠ª∑
 	{
 		ProcessInput(window);
@@ -447,7 +459,25 @@ void GLTextureTestFunc()
 			shader.SetUniformFloat("alpha", alpha);
 		}
 
+		glm::mat4 trans;
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0));
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0, 0, 1));
+		unsigned int transformLoc = glGetUniformLocation(shader.ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
 		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		trans = glm::mat4(1.0f); // reset it to identity matrix
+		trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+		float scaleAmount = sin(glfwGetTime());
+		if (scaleAmount < 0) 
+		{
+			scaleAmount = -scaleAmount;
+		}
+		trans = glm::scale(trans, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); 
+
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);//Ωªªª—’…´ª∫≥Â£®À´ª∫≥Â£©
@@ -459,4 +489,13 @@ void GLTextureTestFunc()
 	glDeleteBuffers(1, &EBO);
 
 	glfwTerminate();// Õ∑≈◊ ‘¥
+}
+
+void GLMTest()
+{
+	glm::vec4 vec(1, 0, 0, 1);
+	glm::mat4 trans;
+	trans = glm::translate(trans, glm::vec3(1, 1, 0));
+	vec = trans * vec;
+	cout << vec.x << vec.y << vec.z << endl;
 }

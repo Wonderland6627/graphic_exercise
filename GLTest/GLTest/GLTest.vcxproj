@@ -147,6 +147,7 @@
     <ClCompile Include="TextureTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CustomStruct.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
