@@ -17,25 +17,25 @@ using namespace std;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
 
-const char* vertexShaderSource =	"#version 330 core\n"//顶点着色器
-									"layout(location = 0) in vec3 aPos;\n"//位置变量的属性位置值为0
-									"layout(location = 1) in vec3 aColor;\n"//颜色变量的属性位置值为1
-								    "out vec3 vertexColor;\n"//向片段着色器输出一个颜色 接收要同名同类型
-									"void main()\n"
-									"{\n"
-									"	gl_Position = vec4(aPos, 1.0);\n"
-									"	vertexColor = aColor;\n"//将vertexColor设置为从顶点数据获得的输入颜色
-									"}\0";
+const char* vertexShaderSource = "#version 330 core\n"//顶点着色器
+								 "layout(location = 0) in vec3 aPos;\n"//位置变量的属性位置值为0
+								 "layout(location = 1) in vec3 aColor;\n"//颜色变量的属性位置值为1
+								 "out vec3 vertexColor;\n"//向片段着色器输出一个颜色 接收要同名同类型
+								 "void main()\n"
+								 "{\n"
+								 "	gl_Position = vec4(aPos, 1.0);\n"
+								 "	vertexColor = aColor;\n"//将vertexColor设置为从顶点数据获得的输入颜色
+								 "}\0";
 
-const char* fragmentShaderSource =	"#version 330 core\n"//片段着色器1
-									"out vec4 FragColor;\n"
-									"in vec3 vertexColor;\n"//接收顶点着色器输入的颜色
-									"void main()\n"
-									"{\n"
-									"	FragColor = vec4(vertexColor,1);\n"
-									"}\0";
+const char* fragmentShaderSource = "#version 330 core\n"//片段着色器1
+								   "out vec4 FragColor;\n"
+								   "in vec3 vertexColor;\n"//接收顶点着色器输入的颜色
+								   "void main()\n"
+								   "{\n"
+								   "	FragColor = vec4(vertexColor,1);\n"
+								   "}\0";
 
-const char* fragmentShaderSource2 =	"#version 330 core\n"
+const char* fragmentShaderSource2 = "#version 330 core\n"
 									"out vec4 FragColor;\n"
 									"uniform vec4 outColor;\n"
 									"void main()\n"
@@ -51,24 +51,26 @@ void ClearScreen();
 void GLTestFunc();
 void GLTextureTestFunc();
 void GLMTest();
+void GLSpaceTest();
 
-int main() 
+int main()
 {
 	//GLTestFunc();
-	GLTextureTestFunc();
+	//GLTextureTestFunc();
 	//GLMTest();
+	GLSpaceTest();
 
 	return 0;
 }
 
-void Framebuffer_size_callback(GLFWwindow* window, int width, int height) 
+void Framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);//视口 前两个左下角位置 后两个宽高
 }
 
 void ProcessInput(GLFWwindow* window)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
@@ -77,10 +79,10 @@ void ProcessInput(GLFWwindow* window)
 void ClearScreen()
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GLTestFunc()
+GLFWwindow* InitGlfwWindow()
 {
 	glfwInit();//初始化glfw
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);//设置版本号为3
@@ -93,7 +95,7 @@ void GLTestFunc()
 		cout << "Failed to create GLFW window" << endl;
 		glfwTerminate();
 
-		return;
+		return NULL;
 	}
 
 	glfwMakeContextCurrent(window);
@@ -102,6 +104,19 @@ void GLTestFunc()
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))//初始化GLAD
 	{
 		cout << "Failed to init GLAD" << endl;
+
+		return NULL;
+	}
+
+	return window;
+}
+
+void GLTestFunc()
+{
+	GLFWwindow* window = InitGlfwWindow();
+	if (window == NULL)
+	{
+		cout << "GLFWWindow is null" << endl;
 
 		return;
 	}
@@ -290,26 +305,10 @@ void GLTestFunc()
 
 void GLTextureTestFunc()
 {
-	glfwInit();//初始化glfw
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);//设置版本号为3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);//核心模式(Core-profile)
-
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "MyOpenGLWindow", NULL, NULL);
+	GLFWwindow* window = InitGlfwWindow();
 	if (window == NULL)
 	{
-		cout << "Failed to create GLFW window" << endl;
-		glfwTerminate();
-
-		return;
-	}
-
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, Framebuffer_size_callback);//每当窗口改变大小，GLFW会调用这个函数
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))//初始化GLAD
-	{
-		cout << "Failed to init GLAD" << endl;
+		cout << "GLFWWindow is null" << endl;
 
 		return;
 	}
@@ -319,9 +318,9 @@ void GLTextureTestFunc()
 		0.0f, 0.0f, // 左下角
 		1.0f, 0.0f, // 右下角
 		0.5f, 1.0f // 上中
-	}; 
+	};
 
-	float vertices[] = 
+	float vertices[] =
 	{
 		//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
 			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
@@ -415,7 +414,7 @@ void GLTextureTestFunc()
 	}
 
 	stbi_image_free(data2);
-	
+
 	string shaderPathSuffix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
 	string vertexShaderPath = shaderPathSuffix + "/TextureVertex.glsl";
 	string fragmentShaderPath = shaderPathSuffix + "/TextureFragment.glsl";
@@ -471,12 +470,12 @@ void GLTextureTestFunc()
 		trans = glm::mat4(1.0f); // reset it to identity matrix
 		trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
 		float scaleAmount = sin(glfwGetTime());
-		if (scaleAmount < 0) 
+		if (scaleAmount < 0)
 		{
 			scaleAmount = -scaleAmount;
 		}
 		trans = glm::scale(trans, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans)); 
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -498,4 +497,231 @@ void GLMTest()
 	trans = glm::translate(trans, glm::vec3(1, 1, 0));
 	vec = trans * vec;
 	cout << vec.x << vec.y << vec.z << endl;
+}
+
+void GLSpaceTest()
+{
+	GLFWwindow* window = InitGlfwWindow();
+	if (window == NULL)
+	{
+		cout << "GLFWWindow is null" << endl;
+
+		return;
+	}
+
+	glEnable(GL_DEPTH_TEST);
+
+	glm::vec3 cubePositions[] =
+	{
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
+
+	float vertices[] =
+	{
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	};
+
+	unsigned int indices[] =
+	{
+		0,1,3,
+		1,2,3,
+	};
+
+	unsigned int VAO;
+	unsigned int VBO;
+
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	unsigned int texture1;
+
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);//绑定贴图
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width;
+	int height;
+	int nrChannels;//颜色通道数
+	unsigned char* data = stbi_load("D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Textures/wall.jpg", &width, &height, &nrChannels, 0);//加载贴图数据
+
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);//生成纹理
+	}
+	else
+	{
+		cout << "Load Texture1 Failed" << endl;
+	}
+
+	stbi_image_free(data);
+
+	unsigned int texture2;
+
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width2;
+	int height2;
+	int nrChannels2;
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* data2 = stbi_load("D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Textures/awesomeface.png", &width2, &height2, &nrChannels2, 0);//加载贴图数据
+
+	if (data2)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
+		glGenerateMipmap(GL_TEXTURE_2D);//生成纹理
+	}
+	else
+	{
+		cout << "Load Texture2 Failed" << endl;
+	}
+
+	stbi_image_free(data2);
+
+	string shaderPathSuffix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
+	string vertexShaderPath = shaderPathSuffix + "/SpaceVertex.glsl";
+	string fragmentShaderPath = shaderPathSuffix + "/SpaceFragment.glsl";
+
+	const GLchar* vertexSPath = (GLchar*)(vertexShaderPath.c_str());
+	const GLchar* fragmentSPath = (GLchar*)(fragmentShaderPath.c_str());
+
+	Shader shader(vertexSPath, fragmentSPath);
+	shader.Use();
+	shader.SetUniformInt("texture1", 0);
+	shader.SetUniformInt("texture2", 1);
+	shader.SetUniformFloat("alpha", 0.2f);
+
+	float offsetX = 0;
+	float offsetZ = 0;
+	while (!glfwWindowShouldClose(window))//渲染循环
+	{
+		ProcessInput(window);
+
+		if (glfwGetKey(window, GLFW_KEY_D) == 1)
+		{
+			offsetX -= 0.05f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == 1)
+		{
+			offsetX += 0.05f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_W) == 1)
+		{
+			offsetZ += 0.05f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == 1)
+		{
+			offsetZ -= 0.05f;
+		}
+
+		ClearScreen();
+
+		glActiveTexture(GL_TEXTURE0);//在绑定纹理之前先激活纹理单元 GL_TEXTURE0纹理单元默认总是被激活的
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
+
+		shader.Use();
+
+		glBindVertexArray(VAO);
+
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			float angle = 20.0f * i + 15;
+			glm::mat4 model;
+			glm::mat4 view;
+			glm::mat4 projection;
+
+			model = glm::translate(model, cubePositions[i]);
+			if (i % 3 != 0 || i == 0)
+			{
+				model = glm::rotate(model, glm::radians(angle) * (float)glfwGetTime(), glm::vec3(1, 0.0f, 0.5f));
+			}
+			view = glm::translate(view, glm::vec3(0.0f + offsetX, 0.0f, -3.0f + offsetZ));
+			projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+			shader.SetUniformMatrix4fv("model", model);
+			shader.SetUniformMatrix4fv("view", view);
+			shader.SetUniformMatrix4fv("projection", projection);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
+		glfwSwapBuffers(window);//交换颜色缓冲（双缓冲）
+		glfwPollEvents();//检测触发事件
+	}
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+
+	glfwTerminate();//释放资源
 }
