@@ -45,7 +45,16 @@ const char* fragmentShaderSource2 = "#version 330 core\n"
 
 #pragma endregion
 
+float lastX = 400;
+float lastY = 400;
+float yaw = 0;
+float pitch = 0;
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
 void Framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void Mouse_Callback(GLFWwindow* window, double xpos, double ypos);
 void ProcessInput(GLFWwindow* window);
 void ClearScreen();
 void GLTestFunc();
@@ -510,6 +519,7 @@ void GLSpaceTest()
 	}
 
 	glEnable(GL_DEPTH_TEST);
+	glfwSetCursorPosCallback(window, Mouse_Callback);
 
 	glm::vec3 cubePositions[] =
 	{
@@ -662,26 +672,39 @@ void GLSpaceTest()
 
 	float offsetX = 0;
 	float offsetZ = 0;
+
+	float cameraSpeed = 0.1f;
+
 	while (!glfwWindowShouldClose(window))//渲染循环
 	{
 		ProcessInput(window);
 
-		if (glfwGetKey(window, GLFW_KEY_D) == 1)
+		float deltaTime = 0;
+		float lastFrame = 0;
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		cameraSpeed = 0.1f * deltaTime;
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			offsetX -= 0.05f;
+			cameraPos += cameraSpeed * cameraFront;
 		}
-		if (glfwGetKey(window, GLFW_KEY_A) == 1)
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			offsetX += 0.05f;
+			cameraPos -= cameraSpeed * cameraFront;
 		}
-		if (glfwGetKey(window, GLFW_KEY_W) == 1)
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			offsetZ += 0.05f;
+			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		}
-		if (glfwGetKey(window, GLFW_KEY_S) == 1)
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
-			offsetZ -= 0.05f;
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		}
+
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 		ClearScreen();
 
@@ -706,7 +729,13 @@ void GLSpaceTest()
 			{
 				model = glm::rotate(model, glm::radians(angle) * (float)glfwGetTime(), glm::vec3(1, 0.0f, 0.5f));
 			}
-			view = glm::translate(view, glm::vec3(0.0f + offsetX, 0.0f, -3.0f + offsetZ));
+			//view = glm::translate(view, glm::vec3(0.0f + offsetX, 0.0f, -3.0f + offsetZ));
+
+			float radius = 10;
+			float camX = sin(glfwGetTime()) * radius;
+			float camZ = cos(glfwGetTime()) * radius;
+			view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
 			projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
 			shader.SetUniformMatrix4fv("model", model);
@@ -724,4 +753,56 @@ void GLSpaceTest()
 	glDeleteBuffers(1, &VBO);
 
 	glfwTerminate();//释放资源
+}
+
+void GLCameraTest() 
+{
+	glm::vec3 cameraPos = glm::vec3(0, 0, 3);//摄像机位置
+	glm::vec3 cameraTarget = glm::vec3(0, 0, 0);//摄像机朝向
+	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);//摄像机方向
+
+	glm::vec3 up = glm::vec3(0, 1, 0);
+	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));//右轴
+	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);//上轴
+
+	glm::mat4 view;
+	view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+}
+
+void Mouse_Callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (true)
+	{
+		lastX = xpos;
+		lastY = ypos;
+	}
+	
+	float xOffset = xpos - lastX;
+	float yOffset = lastY - ypos;
+
+	lastX = xpos;
+	lastY = ypos;
+
+	float sensitivity = 0.05f;//灵敏度
+	xOffset *= sensitivity;
+	yOffset *= sensitivity;
+
+	yaw += xOffset;
+	pitch = yOffset;
+
+	if (pitch > 89.0f)
+	{
+		pitch = 89.0f;
+	}
+	if (pitch < -89.0f)
+	{
+		pitch = -89.0f;
+	}
+
+	glm::vec3 front;
+	front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+	front.y = sin(glm::radians(pitch));
+	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+
+	cameraFront = glm::normalize(front);
 }
