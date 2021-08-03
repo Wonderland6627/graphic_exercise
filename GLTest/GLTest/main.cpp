@@ -46,16 +46,9 @@ const char* fragmentShaderSource2 = "#version 330 core\n"
 
 #pragma endregion
 
-float lastX = 400;
-float lastY = 400;
-float yaw = 0;
-float pitch = 0;
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
 void Framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void Mouse_Callback(GLFWwindow* window, double xpos, double ypos);
+void Mouse_Callback(GLFWwindow* window, double xPos, double yPos);
+void Scroll_Callback(GLFWwindow* window, double xOffset, double yOffset);
 void ProcessInput(GLFWwindow* window);
 void ClearScreen();
 void GLTestFunc();
@@ -509,6 +502,14 @@ void GLMTest()
 	cout << vec.x << vec.y << vec.z << endl;
 }
 
+Camera camera(glm::vec3(0, 0, 0));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+float deltaTime = 0;
+float lastFrame = 0;
+
 void GLSpaceTest()
 {
 	GLFWwindow* window = InitGlfwWindow();
@@ -518,6 +519,10 @@ void GLSpaceTest()
 
 		return;
 	}
+
+	glfwSetCursorPosCallback(window, Mouse_Callback);
+	glfwSetScrollCallback(window, Scroll_Callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -670,41 +675,30 @@ void GLSpaceTest()
 	shader.SetUniformInt("texture2", 1);
 	shader.SetUniformFloat("alpha", 0.2f);
 
-	float offsetX = 0;
-	float offsetZ = 0;
-
-	float cameraSpeed = 0.1f;
-
 	while (!glfwWindowShouldClose(window))//äÖÈ¾Ñ­»·
 	{
 		ProcessInput(window);
 
-		float deltaTime = 0;
-		float lastFrame = 0;
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		cameraSpeed = 0.1f * deltaTime;
-
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			cameraPos += cameraSpeed * cameraFront;
+			camera.ProcessKeyboard(Forward, deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			cameraPos -= cameraSpeed * cameraFront;
+			camera.ProcessKeyboard(Backward, deltaTime);
 		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
 		{
-			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+			camera.ProcessKeyboard(Left, deltaTime);
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
-			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+			camera.ProcessKeyboard(Right, deltaTime);
 		}
-
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 		ClearScreen();
 
@@ -717,30 +711,25 @@ void GLSpaceTest()
 
 		glBindVertexArray(VAO);
 
+		glm::mat4 view;
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		view = camera.GetViewMatrix();
+		shader.SetUniformMatrix4fv("view", view);
+		shader.SetUniformMatrix4fv("projection", projection);
+
 		for (unsigned int i = 0; i < 10; i++)
 		{
 			float angle = 20.0f * i + 15;
 			glm::mat4 model;
-			glm::mat4 view;
-			glm::mat4 projection;
 
 			model = glm::translate(model, cubePositions[i]);
 			if (i % 3 != 0 || i == 0)
 			{
-				model = glm::rotate(model, glm::radians(angle) * (float)glfwGetTime(), glm::vec3(1, 0.0f, 0.5f));
+				model = glm::rotate(model, glm::radians(angle), glm::vec3(1, 0.3f, 0.5f));
 			}
-			//view = glm::translate(view, glm::vec3(0.0f + offsetX, 0.0f, -3.0f + offsetZ));
-
-			float radius = 10;
-			float camX = sin(glfwGetTime()) * radius;
-			float camZ = cos(glfwGetTime()) * radius;
-			view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-			projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
 			shader.SetUniformMatrix4fv("model", model);
-			shader.SetUniformMatrix4fv("view", view);
-			shader.SetUniformMatrix4fv("projection", projection);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
@@ -769,40 +758,25 @@ void GLCameraTest()
 	view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
-void Mouse_Callback(GLFWwindow* window, double xpos, double ypos)
+void Mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 {
-	if (true)
+	if (firstMouse)
 	{
-		lastX = xpos;
-		lastY = ypos;
-	}
-	
-	float xOffset = xpos - lastX;
-	float yOffset = lastY - ypos;
-
-	lastX = xpos;
-	lastY = ypos;
-
-	float sensitivity = 0.05f;//ÁéÃô¶È
-	xOffset *= sensitivity;
-	yOffset *= sensitivity;
-
-	yaw += xOffset;
-	pitch = yOffset;
-
-	if (pitch > 89.0f)
-	{
-		pitch = 89.0f;
-	}
-	if (pitch < -89.0f)
-	{
-		pitch = -89.0f;
+		lastX = xPos;
+		lastY = yPos;
+		firstMouse = false;
 	}
 
-	glm::vec3 front;
-	front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-	front.y = sin(glm::radians(pitch));
-	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+	float xOffset = xPos - lastX;
+	float yOffset = lastY - yPos;
 
-	cameraFront = glm::normalize(front);
+	lastX = xPos;
+	lastY = yPos;
+
+	camera.ProcessMouseMovement(xOffset, yOffset);
+}
+
+void Scroll_Callback(GLFWwindow* window, double xOffset, double yOffset)
+{
+	camera.ProcessMouseScroll(yOffset);
 }

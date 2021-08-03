@@ -130,4 +130,11 @@ private:
 		right = glm::normalize(glm::cross(front, worldUp));
 		up = glm::normalize(glm::cross(right, front));
 	}
+
+	glm::mat4 LookAtMatrix(glm::vec3 position, glm::vec3 target, glm::vec3 worldUp)
+	{
+		glm::vec3 zaxis = glm::normalize(position - target);
+		glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(worldUp), zaxis));
+		glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+	}
 };
