@@ -123,6 +123,12 @@ public:
 		glUniform4f(location, r, g, b, a);
 	}
 
+	void SetUniformVec3(const string& name, float x, float y, float z) const
+	{
+		int location = glGetUniformLocation(ID, name.c_str());
+		glUniform3f(location, x, y, z);
+	}
+
 	void SetUniformMatrix4fv(const string& name, glm::mat4 matrix)
 	{
 		int location = glGetUniformLocation(ID, name.c_str());

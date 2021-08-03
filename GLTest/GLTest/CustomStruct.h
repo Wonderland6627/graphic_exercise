@@ -125,10 +125,10 @@ private:
 		front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 		front.y = sin(glm::radians(pitch));
 		front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-		front = glm::normalize(front);
+		this->front = glm::normalize(front);
 
-		right = glm::normalize(glm::cross(front, worldUp));
-		up = glm::normalize(glm::cross(right, front));
+		right = glm::normalize(glm::cross(this->front, worldUp));
+		up = glm::normalize(glm::cross(right, this->front));
 	}
 
 	glm::mat4 LookAtMatrix(glm::vec3 position, glm::vec3 target, glm::vec3 worldUp)
