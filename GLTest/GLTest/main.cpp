@@ -938,6 +938,19 @@ void GLLightingTest()
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			camera.ProcessKeyboard(Right, deltaTime);
 
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		{
+			float x = lightPos.x;
+			x -= 0.05f;
+			lightPos = glm::vec3(x, lightPos.y, lightPos.z);
+		}
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		{
+			float x = lightPos.x;
+			x += 0.05f;
+			lightPos = glm::vec3(x, lightPos.y, lightPos.z);
+		}
+
 		// render
 		// ------
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -948,6 +961,7 @@ void GLLightingTest()
 		lightingShader.SetUniformVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		lightingShader.SetUniformVec3("lightColor", 1.0f, 1.0f, 1.0f);
 		lightingShader.SetUniformVec3("lightPos", lightPos);
+		lightingShader.SetUniformVec3("viewPos", camera.position);
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);

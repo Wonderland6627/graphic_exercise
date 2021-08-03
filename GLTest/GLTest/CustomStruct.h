@@ -4,6 +4,8 @@
 
 #include<vector>
 
+#pragma region Camera
+
 enum Camera_Movement_Type
 {
 	Forward,
@@ -138,3 +140,5 @@ private:
 		glm::vec3 yaxis = glm::cross(zaxis, xaxis);
 	}
 };
+
+#pragma endregion
