@@ -57,6 +57,7 @@ void GLMTest();
 void GLSpaceTest();
 void GLLightingTest();
 void StructTest();
+void TriangleTest();
 
 int main()
 {
@@ -66,7 +67,9 @@ int main()
 	//GLSpaceTest();
 	//GLLightingTest();
 
-	StructTest();
+	//StructTest();
+
+	TriangleTest();
 
 	return 0;
 }
@@ -1039,4 +1042,41 @@ void StructTest()
 	cout << m2.ToString() << endl;
 	cout << m3.ToString() << endl;
 	cout << m4.ToString() << endl;
+}
+
+void TriangleTest() 
+{
+	GLFWwindow* window = InitGlfwWindow();
+	if (window == NULL)
+	{
+		cout << "GLFWWindow is null" << endl;
+
+		return;
+	}
+
+	Vector points[] =
+	{
+		Vector(-1,0,0),
+		Vector(0,0,0),
+		Vector(0,1,0),
+	};
+
+	Triangle t(points);
+	t.InitTriangle();
+
+	while (!glfwWindowShouldClose(window))
+	{
+		ProcessInput(window);
+
+		ClearScreen();
+
+		t.Draw();
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	t.Clear();
+
+	glfwTerminate();
 }

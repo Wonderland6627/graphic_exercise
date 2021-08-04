@@ -1,22 +1,20 @@
 ﻿  main.cpp
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\CustomStruct.h(252,9): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\CustomStruct.h(252,9): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(480,21): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(687,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(770,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(771,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(775,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(776,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(778,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(779,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(786,28): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(927,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(953,35): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(483,21): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(690,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(773,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(774,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(778,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(779,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(781,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(782,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(789,28): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(930,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(956,35): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
           with
           [
               T=float
           ]
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(954,39): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(957,39): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
           with
           [
               T=float

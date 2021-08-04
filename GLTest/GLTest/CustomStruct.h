@@ -232,6 +232,7 @@ Matrix operator * (const Matrix& m1, const Matrix& m2)
 			for (int k = 0; k < m1.columns; k++)
 			{
 				resultMatrix.elements[i][j] += (m1.elements[i][k] * m2.elements[k][j]);
+					//第i行j列的值为m1的第i行上的n个数和m2的第j列上的n个数对应相乘之和，其中n为m1的列数，也是m2的行数，m1的列数和m2的行数相等
 			}
 		}
 	}
@@ -249,7 +250,10 @@ public:
 	Vector point1;
 	Vector point2;
 	Vector point3;
-	Vector points[];
+	Vector points[3];
+
+	unsigned int VAO;
+	unsigned int VBO;
 
 	Triangle(Vector* points)
 	{
@@ -259,10 +263,38 @@ public:
 		}
 	}
 
+	void InitTriangle()
+	{
+		float vertices[] =
+		{
+			points[0].x, points[0].y, points[0].z,
+			points[1].x, points[1].y, points[1].z,
+			points[2].x, points[2].y, points[2].z,
+		};
+
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
+
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+	}
+
 	void Draw()
 	{
-
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
+
+	void Clear() 
+	{
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+	}
+
 private:
 
 };
