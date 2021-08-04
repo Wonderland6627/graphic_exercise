@@ -115,7 +115,129 @@ Vector operator * (const Vector& v1, const float x)
 
 #pragma region Matrix
 
+class Matrix 
+{
+public:
+	int rows;
+	int columns;
+	int size;
 
+	double **elements;
+
+	Matrix()
+	{
+
+	}
+
+	Matrix(int rows, int columns, double value = 0)
+	{
+		this->rows = rows;
+		this->columns = columns;
+		size = rows * columns;
+
+		if (size > 0)
+		{
+			elements = new double* [rows];
+			for (int i = 0; i < rows; i++)
+			{
+				elements[i] = new double[columns];
+			}
+
+			for (int i = 0; i < rows; i++)
+			{
+				for (int j = 0; j < columns; j++)
+				{
+					elements[i][j] = value;
+				}
+			}
+		}
+	}
+
+	string ToString() 
+	{
+		string log = "";
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < columns; j++)
+			{
+				cout << elements[i][j] << "\t";
+			}
+			cout << endl;
+		}
+
+		return log;
+	}
+};
+
+Matrix operator + (const Matrix& m1, const Matrix& m2)
+{
+	if (m1.rows != m2.rows || m1.columns != m2.columns)
+	{
+		Matrix emptyMatrix(0, 0);
+		cout << "矩阵格式不对，不能相加。" << endl;
+
+		return emptyMatrix;
+	}
+
+	Matrix resultMatrix(m1.rows, m1.columns);
+	for (int i = 0; i <  m1.rows; i++)
+	{
+		for (int j = 0; j < m1.columns; j++)
+		{
+			resultMatrix.elements[i][j] = m1.elements[i][j] + m2.elements[i][j];
+		}
+	}
+
+	return resultMatrix;
+}
+
+Matrix operator - (const Matrix& m1, const Matrix& m2)
+{
+	if (m1.rows != m2.rows || m1.columns != m2.columns)
+	{
+		Matrix emptyMatrix(0, 0);
+		cout << "矩阵格式不对，不能相减。" << endl;
+
+		return emptyMatrix;
+	}
+
+	Matrix resultMatrix(m1.rows, m1.columns);
+	for (int i = 0; i < m1.rows; i++)
+	{
+		for (int j = 0; j < m1.columns; j++)
+		{
+			resultMatrix.elements[i][j] = m1.elements[i][j] - m2.elements[i][j];
+		}
+	}
+
+	return resultMatrix;
+}
+
+Matrix operator * (const Matrix& m1, const Matrix& m2)
+{
+	if (m1.columns != m2.rows)
+	{
+		Matrix emptyMatrix(0, 0);
+		cout << "矩阵格式不对，不能相乘。（m1的列数要和m2的行数相等）" << endl;
+
+		return emptyMatrix;
+	}
+
+	Matrix resultMatrix(m1.rows, m1.columns);
+
+	for (int i = 0; i < m1.rows; i++)
+	{
+		for (int j = 0; j < m2.columns; j++)
+		{
+			for (int k = 0; k < m1.columns; k++)
+			{
+				resultMatrix.elements[i][j] += (m1.elements[i][k] * m2.elements[k][j]);
+			}
+		}
+	}
+
+	return resultMatrix;
+}
 
 #pragma endregion
 
@@ -137,7 +259,10 @@ public:
 		}
 	}
 
+	void Draw()
+	{
 
+	}
 private:
 
 };

@@ -64,9 +64,9 @@ int main()
 	//GLTextureTestFunc();
 	//GLMTest();
 	//GLSpaceTest();
-	GLLightingTest();
+	//GLLightingTest();
 
-	//StructTest();
+	StructTest();
 
 	return 0;
 }
@@ -1030,4 +1030,13 @@ void StructTest()
 	cout << add.ToString() << endl;
 	cout << sub.ToString() << endl;
 	cout << multi.ToString() << endl;
+
+	Matrix m(3, 3, 6);
+	Matrix m2(3, 3, 1);
+	Matrix m3 = m - m2;
+	Matrix m4 = m * m2;
+	cout << m.ToString() << endl;
+	cout << m2.ToString() << endl;
+	cout << m3.ToString() << endl;
+	cout << m4.ToString() << endl;
 }
