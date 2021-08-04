@@ -15,6 +15,11 @@ public:
 	float magnitude;//模
 	float sqrtMagnitude;//模的平方
 
+	Vector()
+	{
+
+	}
+
 	Vector(float x, float y, float z, float w = 0)
 	{
 		this->x = x;
@@ -26,7 +31,14 @@ public:
 		magnitude = sqrt(sqrtMagnitude);
 	}
 
-	string ToString() 
+	glm::vec3 Toglmvec3()
+	{
+		glm::vec3 v(this->x, this->y, this->z);
+
+		return v;
+	}
+
+	string ToString()
 	{
 		ostringstream ostr;
 		ostr << "x:" << x << " y:" << y << " z:" << z << " w:" << w;
@@ -65,7 +77,12 @@ public:
 		return Vector(x, y, z);
 	}
 
-	bool operator == (const Vector &target) const
+	static Vector ToVector(glm::vec3 v)
+	{
+		return Vector(v.x, v.y, v.z);
+	}
+
+	bool operator == (const Vector& target) const
 	{
 		if (this->x == target.x && this->y == target.y && this->z == target.z && this->w == target.w)
 		{
@@ -76,20 +93,20 @@ public:
 	}
 
 private:
-	
+
 };
 
-Vector operator+ (const Vector& v1, const Vector& v2)
+Vector operator + (const Vector& v1, const Vector& v2)
 {
 	return Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w);
 }
 
-Vector operator- (const Vector& v1, const Vector& v2)
+Vector operator - (const Vector& v1, const Vector& v2)
 {
 	return Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w);
 }
 
-Vector operator* (const Vector& v1, const float x)
+Vector operator * (const Vector& v1, const float x)
 {
 	return Vector(v1.x * x, v1.y * x, v1.z * x, v1.w * x);
 }
@@ -110,6 +127,17 @@ public:
 	Vector point1;
 	Vector point2;
 	Vector point3;
+	Vector points[];
+
+	Triangle(Vector* points)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			this->points[i] = points[i];
+		}
+	}
+
+
 private:
 
 };
@@ -135,11 +163,11 @@ const float ZOOM = 45.0f;
 class Camera
 {
 public:
-	glm::vec3 position;
-	glm::vec3 front;
-	glm::vec3 up;
-	glm::vec3 right;
-	glm::vec3 worldUp;
+	Vector position;
+	Vector front;
+	Vector up;
+	Vector right;
+	Vector worldUp;
 
 	float yaw;
 	float pitch;
@@ -147,8 +175,8 @@ public:
 	float mouseSensitivity;
 	float zoom;
 
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH)
-		: front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM)
+	Camera(Vector position = Vector(0.0f, 0.0f, 0.0f), Vector up = Vector(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH)
+		: front(Vector(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM)
 	{
 		this->position = position;
 		this->worldUp = up;
@@ -159,10 +187,10 @@ public:
 	}
 
 	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
-		: front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM)
+		: front(Vector(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), zoom(ZOOM)
 	{
-		this->position = glm::vec3(posX, posY, posZ);
-		this->worldUp = glm::vec3(upX, upY, upZ);
+		this->position = Vector(posX, posY, posZ);
+		this->worldUp = Vector(upX, upY, upZ);
 		this->yaw = yaw;
 		this->pitch = pitch;
 
@@ -171,7 +199,7 @@ public:
 
 	glm::mat4 GetViewMatrix()
 	{
-		return glm::lookAt(position, position + front, up);
+		return glm::lookAt(position.Toglmvec3(), position.Toglmvec3() + front.Toglmvec3(), up.Toglmvec3());
 	}
 
 	void ProcessKeyboard(Camera_Movement_Type direction, float deltaTime)
@@ -179,19 +207,19 @@ public:
 		float velocity = movementSpeed * deltaTime;
 		if (direction == Forward)
 		{
-			position += front * velocity;
+			position = position + front * velocity;
 		}
 		if (direction == Backward)
 		{
-			position -= front * velocity;
+			position = position - front * velocity;
 		}
 		if (direction == Left)
 		{
-			position -= right * velocity;
+			position = position - right * velocity;
 		}
 		if (direction == Right)
 		{
-			position += right * velocity;
+			position = position + right * velocity;
 		}
 	}
 
@@ -239,17 +267,13 @@ private:
 		front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 		front.y = sin(glm::radians(pitch));
 		front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-		this->front = glm::normalize(front);
+		this->front = Vector::ToVector(glm::normalize(front));
 
-		right = glm::normalize(glm::cross(this->front, worldUp));
-		up = glm::normalize(glm::cross(right, this->front));
-	}
-
-	glm::mat4 LookAtMatrix(glm::vec3 position, glm::vec3 target, glm::vec3 worldUp)
-	{
-		glm::vec3 zaxis = glm::normalize(position - target);
-		glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(worldUp), zaxis));
-		glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+		glm::vec3 glmRight = glm::normalize(glm::cross(this->front.Toglmvec3(), worldUp.Toglmvec3()));
+		glm::vec3 glmUp = glm::normalize(glm::cross(right.Toglmvec3(), this->front.Toglmvec3()));
+		
+		right = Vector::ToVector(glmRight);
+		up = Vector::ToVector(glmUp);
 	}
 };
 
@@ -258,7 +282,7 @@ private:
 class Custom
 {
 public:
-	
+
 
 private:
 

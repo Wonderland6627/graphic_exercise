@@ -64,9 +64,9 @@ int main()
 	//GLTextureTestFunc();
 	//GLMTest();
 	//GLSpaceTest();
-	//GLLightingTest();
+	GLLightingTest();
 
-	StructTest();
+	//StructTest();
 
 	return 0;
 }
@@ -507,7 +507,7 @@ void GLMTest()
 	cout << vec.x << vec.y << vec.z << endl;
 }
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(Vector(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -963,7 +963,7 @@ void GLLightingTest()
 		lightingShader.SetUniformVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		lightingShader.SetUniformVec3("lightColor", 1.0f, 1.0f, 1.0f);
 		lightingShader.SetUniformVec3("lightPos", lightPos);
-		lightingShader.SetUniformVec3("viewPos", camera.position);
+		lightingShader.SetUniformVec3("viewPos", camera.position.Toglmvec3());
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
