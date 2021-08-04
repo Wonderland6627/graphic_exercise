@@ -842,8 +842,8 @@ void GLLightingTest()
 	const GLchar* vertexLightingSPath = (GLchar*)(lightCubeVertexShaderPath.c_str());
 	const GLchar* fragmentLightingSPath = (GLchar*)(lightCubeFragmentShaderPath.c_str());
 
-	Shader lightingShader(vertexSPath, fragmentSPath);
-	Shader lightCubeShader(vertexLightingSPath, fragmentLightingSPath);
+	Shader lightingShader("LightingVertex.glsl", "LightingFragment.glsl");
+	Shader lightCubeShader("LightingCubeVertex.glsl", "LightingCubeFragment.glsl");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------

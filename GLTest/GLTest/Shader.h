@@ -30,8 +30,8 @@ public:
 
 		try
 		{
-			vShaderFile.open(vertexPath);
-			fShaderFile.open(fragmentPath);
+			vShaderFile.open(GetShaderFullPath(vertexPath));
+			fShaderFile.open(GetShaderFullPath(fragmentPath));
 
 			stringstream vShaderStream;
 			stringstream fShaderStream;
@@ -139,6 +139,17 @@ public:
 	{
 		int location = glGetUniformLocation(ID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+
+private:
+
+	string shaderPathSuffix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
+
+	string GetShaderFullPath(string shaderName)
+	{
+		string combinePath = shaderPathSuffix + "/" + shaderName;
+
+		return combinePath;
 	}
 };
 
