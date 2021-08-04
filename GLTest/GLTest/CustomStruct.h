@@ -2,7 +2,119 @@
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 
-#include<vector>
+#pragma region Vector
+
+class Vector
+{
+public:
+	float x;
+	float y;
+	float z;
+	float w;
+
+	float magnitude;//模
+	float sqrtMagnitude;//模的平方
+
+	Vector(float x, float y, float z, float w = 0)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = w;
+
+		sqrtMagnitude = x * x + y * y + z * z + w + w;
+		magnitude = sqrt(sqrtMagnitude);
+	}
+
+	string ToString() 
+	{
+		ostringstream ostr;
+		ostr << "x:" << x << " y:" << y << " z:" << z << " w:" << w;
+
+		return ostr.str();
+	}
+
+	static Vector right()
+	{
+		return Vector(1, 0, 0);
+	}
+
+	static Vector up()
+	{
+		return Vector(0, 1, 0);
+	}
+
+	static Vector forward()
+	{
+		return Vector(0, 0, 1);
+	}
+
+	static float Dot(Vector v1, Vector v2)
+	{
+		float result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
+
+		return result;
+	}
+
+	static Vector Cross(Vector v1, Vector v2)
+	{
+		float x = v1.y * v2.z - v1.z * v2.y;
+		float y = v1.z * v2.x - v1.x * v2.z;
+		float z = v1.x * v2.y - v1.y * v2.x;
+
+		return Vector(x, y, z);
+	}
+
+	bool operator == (const Vector &target) const
+	{
+		if (this->x == target.x && this->y == target.y && this->z == target.z && this->w == target.w)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+private:
+	
+};
+
+Vector operator+ (const Vector& v1, const Vector& v2)
+{
+	return Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w);
+}
+
+Vector operator- (const Vector& v1, const Vector& v2)
+{
+	return Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w);
+}
+
+Vector operator* (const Vector& v1, const float x)
+{
+	return Vector(v1.x * x, v1.y * x, v1.z * x, v1.w * x);
+}
+
+#pragma endregion
+
+#pragma region Matrix
+
+
+
+#pragma endregion
+
+#pragma region Triangle
+
+class Triangle
+{
+public:
+	Vector point1;
+	Vector point2;
+	Vector point3;
+private:
+
+};
+
+#pragma endregion
 
 #pragma region Camera
 
@@ -142,3 +254,12 @@ private:
 };
 
 #pragma endregion
+
+class Custom
+{
+public:
+	
+
+private:
+
+};

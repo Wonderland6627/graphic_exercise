@@ -19,30 +19,30 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
 
 const char* vertexShaderSource = "#version 330 core\n"//顶点着色器
-								 "layout(location = 0) in vec3 aPos;\n"//位置变量的属性位置值为0
-								 "layout(location = 1) in vec3 aColor;\n"//颜色变量的属性位置值为1
-								 "out vec3 vertexColor;\n"//向片段着色器输出一个颜色 接收要同名同类型
-								 "void main()\n"
-								 "{\n"
-								 "	gl_Position = vec4(aPos, 1.0);\n"
-								 "	vertexColor = aColor;\n"//将vertexColor设置为从顶点数据获得的输入颜色
-								 "}\0";
+"layout(location = 0) in vec3 aPos;\n"//位置变量的属性位置值为0
+"layout(location = 1) in vec3 aColor;\n"//颜色变量的属性位置值为1
+"out vec3 vertexColor;\n"//向片段着色器输出一个颜色 接收要同名同类型
+"void main()\n"
+"{\n"
+"	gl_Position = vec4(aPos, 1.0);\n"
+"	vertexColor = aColor;\n"//将vertexColor设置为从顶点数据获得的输入颜色
+"}\0";
 
 const char* fragmentShaderSource = "#version 330 core\n"//片段着色器1
-								   "out vec4 FragColor;\n"
-								   "in vec3 vertexColor;\n"//接收顶点着色器输入的颜色
-								   "void main()\n"
-								   "{\n"
-								   "	FragColor = vec4(vertexColor,1);\n"
-								   "}\0";
+"out vec4 FragColor;\n"
+"in vec3 vertexColor;\n"//接收顶点着色器输入的颜色
+"void main()\n"
+"{\n"
+"	FragColor = vec4(vertexColor,1);\n"
+"}\0";
 
 const char* fragmentShaderSource2 = "#version 330 core\n"
-									"out vec4 FragColor;\n"
-									"uniform vec4 outColor;\n"
-									"void main()\n"
-									"{\n"
-									"	FragColor = outColor;\n"
-									"}\0";
+"out vec4 FragColor;\n"
+"uniform vec4 outColor;\n"
+"void main()\n"
+"{\n"
+"	FragColor = outColor;\n"
+"}\0";
 
 #pragma endregion
 
@@ -56,6 +56,7 @@ void GLTextureTestFunc();
 void GLMTest();
 void GLSpaceTest();
 void GLLightingTest();
+void StructTest();
 
 int main()
 {
@@ -63,7 +64,9 @@ int main()
 	//GLTextureTestFunc();
 	//GLMTest();
 	//GLSpaceTest();
-	GLLightingTest();
+	//GLLightingTest();
+
+	StructTest();
 
 	return 0;
 }
@@ -693,7 +696,7 @@ void GLSpaceTest()
 		{
 			camera.ProcessKeyboard(Backward, deltaTime);
 		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
 			camera.ProcessKeyboard(Left, deltaTime);
 		}
@@ -746,7 +749,7 @@ void GLSpaceTest()
 	glfwTerminate();//释放资源
 }
 
-void GLCameraTest() 
+void GLCameraTest()
 {
 	glm::vec3 cameraPos = glm::vec3(0, 0, 3);//摄像机位置
 	glm::vec3 cameraTarget = glm::vec3(0, 0, 0);//摄像机朝向
@@ -812,7 +815,7 @@ void GLLightingTest()
 	glfwSetScrollCallback(window, Scroll_Callback);
 
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
@@ -940,16 +943,15 @@ void GLLightingTest()
 
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		{
-			float x = lightPos.x;
-			x -= 0.05f;
-			lightPos = glm::vec3(x, lightPos.y, lightPos.z);
+			lightPos.x -= 0.05f;
 		}
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 		{
-			float x = lightPos.x;
-			x += 0.05f;
-			lightPos = glm::vec3(x, lightPos.y, lightPos.z);
+			lightPos.x += 0.05f;
 		}
+
+		lightPos.x = sin(glfwGetTime()) * 1.2f;
+		lightPos.y = sin(glfwGetTime() / 2) * 1.0f;
 
 		// render
 		// ------
@@ -981,6 +983,7 @@ void GLLightingTest()
 		lightCubeShader.Use();
 		lightCubeShader.SetUniformMatrix4fv("projection", projection);
 		lightCubeShader.SetUniformMatrix4fv("view", view);
+
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
@@ -1004,4 +1007,27 @@ void GLLightingTest()
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------
 	glfwTerminate();
+}
+
+void StructTest()
+{
+	Vector vec1 = Vector(0, 1.5f, 0);
+	Vector vec2 = Vector(3, 5, 6);
+	Vector vec3 = Vector(2, 4, 5);
+	bool value = vec1 == vec3 ? true : false;
+
+	float result = Vector::Dot(vec1, vec2);
+	Vector cross = Vector::Cross(vec2, vec3);
+	Vector add = vec2 + vec3;
+	Vector sub = vec2 - vec3;
+	Vector multi = vec2 * 3;
+
+	cout << vec1.ToString() << endl;
+	cout << vec2.ToString() << endl;
+	cout << value << endl;
+	cout << result << endl;
+	cout << cross.ToString() << endl;
+	cout << add.ToString() << endl;
+	cout << sub.ToString() << endl;
+	cout << multi.ToString() << endl;
 }
