@@ -248,7 +248,7 @@ Matrix operator * (const Matrix& m1, const Matrix& m2)
 class Triangle
 {
 public:
-	Vector points[3];
+	Vector points[18];
 	int length;
 
 	unsigned int VAO;
@@ -267,9 +267,9 @@ public:
 	{
 		float vertices[] =
 		{
-			points[0].x, points[0].y, points[0].z,
-			points[1].x, points[1].y, points[1].z,
-			points[2].x, points[2].y, points[2].z,
+			points[0].x, points[0].y, points[0].z,	points[3].x, points[3].y, points[3].z,
+			points[1].x, points[1].y, points[1].z,	points[4].x, points[4].y, points[4].z,
+			points[2].x, points[2].y, points[2].z,	points[5].x, points[5].y, points[5].z,
 		};
 
 		glGenVertexArrays(1, &VAO);
@@ -279,14 +279,18 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
 	}
 
 	void DrawTriangle()
 	{
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 
 	void DrawLine()

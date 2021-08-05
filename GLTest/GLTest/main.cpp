@@ -51,6 +51,7 @@ void Mouse_Callback(GLFWwindow* window, double xPos, double yPos);
 void Scroll_Callback(GLFWwindow* window, double xOffset, double yOffset);
 void ProcessInput(GLFWwindow* window);
 void ClearScreen();
+unsigned int LoadTexture(const char* texName);
 void GLTestFunc();
 void GLTextureTestFunc();
 void GLMTest();
@@ -1062,12 +1063,32 @@ void TriangleTest()
 		Vector(-1,0,0),
 		Vector(0,0,0),
 		Vector(0,1,0),
+
+		Vector(0,0,0),
+		Vector(1,0,0),
+		Vector(0.5,1,0),
+	}; 
+	Vector points2[] =
+	{
+		Vector(-0.7,0.2,0.5),
+		Vector(0.1,-0.3,-0.7),
+		Vector(0.5,1,0.03),
+		
+		Vector(0,0,0),
+		Vector(1,0,0),
+		Vector(0.5,1,0),
 	};
 
 	Triangle t(points, 3);
+	Triangle t2(points2, 3);
 	t.InitTriangle();
+	t2.InitTriangle();
+
+	unsigned int texture1 = LoadTexture("D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Textures/wall.jpg");
 
 	Shader s("TriangleVertex.glsl", "TriangleFragment.glsl");
+	s.Use();
+	s.SetUniformInt("texture1", 0);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -1080,23 +1101,71 @@ void TriangleTest()
 
 		ClearScreen();
 
-		s.Use();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+
 		glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 model = glm::mat4(1.0f);
+
+		s.Use();
 		s.SetUniformMatrix4fv("projection", projection);
 		s.SetUniformMatrix4fv("view", view);
-
-		glm::mat4 model = glm::mat4(1.0f);
 		s.SetUniformMatrix4fv("model", model);
 
 		//t.DrawTriangle();
 		t.DrawLine();
+		t2.DrawTriangle();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
 	t.Clear();
+	t2.Clear();
 
 	glfwTerminate();
+}
+
+unsigned int LoadTexture(const char* texName)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int width, height, nrComponents;
+	unsigned char* data = stbi_load(texName, &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		GLenum format;
+		if (nrComponents == 1)
+		{
+			format = GL_RED;
+		}
+		else if (nrComponents == 3)
+		{
+			format = GL_RGB;
+		}
+		else if (nrComponents == 4)
+		{
+			format = GL_RGBA;
+		}
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
+	}
+	else
+	{
+		std::cout << "Texture failed to load at path: " << texName << std::endl;
+		stbi_image_free(data);
+	}
+
+	return textureID;
 }

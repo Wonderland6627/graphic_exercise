@@ -143,11 +143,11 @@ public:
 
 private:
 
-	string shaderPathSuffix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
+	string shaderPathPrefix = "D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Shaders";
 
 	string GetShaderFullPath(string shaderName)
 	{
-		string combinePath = shaderPathSuffix + "/" + shaderName;
+		string combinePath = shaderPathPrefix + "/" + shaderName;
 
 		return combinePath;
 	}
