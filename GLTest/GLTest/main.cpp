@@ -1048,6 +1048,47 @@ void StructTest()
 	cout << m4.ToString() << endl;
 }
 
+unsigned int indices[] =
+{
+	0, 1, 3, // first triangle
+	1, 2, 3  // second triangle
+};
+
+Vector vertices[] =
+{
+	// positions					// colors					// texture coords
+	Vector(0.5f,  0.5f, 0.0f),   Vector(1.0f, 0.0f, 0.0f),   Vector(1.0f, 1.0f,0), // top right		0
+	Vector(0.5f, -0.5f, 0.0f),   Vector(0.0f, 1.0f, 0.0f),   Vector(1.0f, 0.0f,0), // bottom right	1
+	Vector(-0.5f, -0.5f, 0.0f),   Vector(0.0f, 0.0f, 1.0f),   Vector(0.0f, 0.0f,0), // bottom left	2
+	Vector(-0.5f,  0.5f, 0.0f),   Vector(1.0f, 1.0f, 0.0f),   Vector(0.0f, 1.0f,0)  // top left		3
+};
+
+Vector* GetVectorsArray(int index)//第几个三角形，Vector长度
+{
+	Vector vecs[9];
+	int ids[3];
+
+	for (int i = 0; i < 3; i++)
+	{
+		int get = 3 * index + i;
+		ids[i] = indices[get];
+	}
+
+	int vecIndex = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		int start = 3 * ids[i];
+		int end = start + 3;
+		for (int j = start; j < end; j++)
+		{
+			vecs[vecIndex] = vertices[j];
+			vecIndex++;
+		}
+	}
+
+	return vecs;
+}
+
 void TriangleTest() 
 {
 	GLFWwindow* window = InitGlfwWindow();
@@ -1057,6 +1098,8 @@ void TriangleTest()
 
 		return;
 	}
+
+	Vector* target = GetVectorsArray(0);
 
 	Vector points[] =
 	{
@@ -1104,14 +1147,14 @@ void TriangleTest()
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
 
-		glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		/*glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model = glm::mat4(1.0f);
 
 		s.Use();
 		s.SetUniformMatrix4fv("projection", projection);
 		s.SetUniformMatrix4fv("view", view);
-		s.SetUniformMatrix4fv("model", model);
+		s.SetUniformMatrix4fv("model", model);*/
 
 		//t.DrawTriangle();
 		t.DrawLine();
