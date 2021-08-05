@@ -112,6 +112,9 @@ GLFWwindow* InitGlfwWindow()
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, Framebuffer_size_callback);//每当窗口改变大小，GLFW会调用这个函数
 
+	glfwSetCursorPosCallback(window, Mouse_Callback);
+	glfwSetScrollCallback(window, Scroll_Callback);
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))//初始化GLAD
 	{
 		cout << "Failed to init GLAD" << endl;
@@ -1061,16 +1064,33 @@ void TriangleTest()
 		Vector(0,1,0),
 	};
 
-	Triangle t(points);
+	Triangle t(points, 3);
 	t.InitTriangle();
+
+	Shader s("TriangleVertex.glsl", "TriangleFragment.glsl");
 
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		ProcessInput(window);
+		camera.ListenMoveInput(window, deltaTime);
 
 		ClearScreen();
 
-		t.Draw();
+		s.Use();
+		glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		s.SetUniformMatrix4fv("projection", projection);
+		s.SetUniformMatrix4fv("view", view);
+
+		glm::mat4 model = glm::mat4(1.0f);
+		s.SetUniformMatrix4fv("model", model);
+
+		//t.DrawTriangle();
+		t.DrawLine();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

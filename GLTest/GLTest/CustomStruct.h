@@ -1,6 +1,7 @@
 #include<glad/glad.h>
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
+#include<GLFW/glfw3.h>
 
 #pragma region Vector
 
@@ -247,17 +248,16 @@ Matrix operator * (const Matrix& m1, const Matrix& m2)
 class Triangle
 {
 public:
-	Vector point1;
-	Vector point2;
-	Vector point3;
 	Vector points[3];
+	int length;
 
 	unsigned int VAO;
 	unsigned int VBO;
 
-	Triangle(Vector* points)
+	Triangle(Vector* points, int length)
 	{
-		for (int i = 0; i < 3; i++)
+		this->length = length;
+		for (int i = 0; i < length; i++)
 		{
 			this->points[i] = points[i];
 		}
@@ -283,10 +283,17 @@ public:
 		glEnableVertexAttribArray(0);
 	}
 
-	void Draw()
+	void DrawTriangle()
 	{
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+	}
+
+	void DrawLine()
+	{
+		glBindVertexArray(VAO);
+		glLineWidth(2);
+		glDrawArrays(GL_LINE_LOOP, 0, 3);
 	}
 
 	void Clear() 
@@ -296,7 +303,10 @@ public:
 	}
 
 private:
+	float* GetVectorsArray() 
+	{
 
+	}
 };
 
 #pragma endregion
@@ -413,6 +423,26 @@ public:
 		if (zoom > 45.0f)
 		{
 			zoom = 45.0f;
+		}
+	}
+
+	void ListenMoveInput(GLFWwindow* window, float deltaTime)
+	{
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			ProcessKeyboard(Forward, deltaTime);
+		}	
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			ProcessKeyboard(Backward, deltaTime);
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			ProcessKeyboard(Left, deltaTime);
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			ProcessKeyboard(Right, deltaTime);
 		}
 	}
 
