@@ -1147,7 +1147,7 @@ void TriangleTest()
 	int width;
 	int height;
 	int nrChannels;//颜色通道数
-	unsigned char* data = stbi_load("D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Textures/wall.jpg", &width, &height, &nrChannels, 0);//加载贴图数据
+	unsigned char* data = stbi_load("D:/Longtu/Graphic_Exercise/graphic_exercise/GLTest/GLTest/Textures/wood.jpg", &width, &height, &nrChannels, 0);//加载贴图数据
 	Texture2D tex;
 	tex.Generate(width, height, data);
 	

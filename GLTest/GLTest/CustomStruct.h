@@ -116,14 +116,14 @@ Vector operator * (const Vector& v1, const float x)
 
 #pragma region Matrix
 
-class Matrix 
+class Matrix
 {
 public:
 	int rows;
 	int columns;
 	int size;
 
-	double **elements;
+	double** elements;
 
 	Matrix()
 	{
@@ -154,7 +154,7 @@ public:
 		}
 	}
 
-	string ToString() 
+	string ToString()
 	{
 		string log = "";
 		for (int i = 0; i < rows; i++)
@@ -181,7 +181,7 @@ Matrix operator + (const Matrix& m1, const Matrix& m2)
 	}
 
 	Matrix resultMatrix(m1.rows, m1.columns);
-	for (int i = 0; i <  m1.rows; i++)
+	for (int i = 0; i < m1.rows; i++)
 	{
 		for (int j = 0; j < m1.columns; j++)
 		{
@@ -233,7 +233,7 @@ Matrix operator * (const Matrix& m1, const Matrix& m2)
 			for (int k = 0; k < m1.columns; k++)
 			{
 				resultMatrix.elements[i][j] += (m1.elements[i][k] * m2.elements[k][j]);
-					//第i行j列的值为m1的第i行上的n个数和m2的第j列上的n个数对应相乘之和，其中n为m1的列数，也是m2的行数，m1的列数和m2的行数相等
+				//第i行j列的值为m1的第i行上的n个数和m2的第j列上的n个数对应相乘之和，其中n为m1的列数，也是m2的行数，m1的列数和m2的行数相等
 			}
 		}
 	}
@@ -274,12 +274,12 @@ public:
 
 		glBindTexture(GL_TEXTURE_2D, ID);
 		glTexImage2D(GL_TEXTURE_2D, 0, this->Internal_Format, width, height, 0, this->Image_Format, GL_UNSIGNED_BYTE, data);
-		
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->Wrap_S);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->Wrap_T);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->Filter_Min);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->Filter_Max);
-		
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
@@ -573,7 +573,7 @@ public:
 
 		shader.SetUniformVec3("objectColor", 1.0f, 1.0f, 1.0f);
 		shader.SetUniformVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		shader.SetUniformVec3("lightPos", 1,1,1);
+		shader.SetUniformVec3("lightPos", 1.5f, 1.5f, 1.5f);
 		shader.SetUniformVec3("viewPos", camera.position.Toglmvec3());
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)800 / (float)800, 0.1f, 100.0f);
@@ -591,7 +591,7 @@ public:
 	}
 
 private:
-	
+
 };
 
 #pragma endregion
