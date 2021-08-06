@@ -19,7 +19,7 @@ D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(976,39): warn
           [
               T=float
           ]
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1175,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1178,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1091): warning C4172: 返回局部变量或临时变量的地址: ids
 D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1111): warning C4172: 返回局部变量或临时变量的地址: vecs
 D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(74): warning C4715: “Input::GetKetDown”: 不是所有的控件路径都返回值

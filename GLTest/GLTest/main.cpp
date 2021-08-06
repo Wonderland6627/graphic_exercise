@@ -1002,7 +1002,7 @@ void GLLightingTest()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// also draw the lamp object
-		lightCubeShader.Use();
+		/*lightCubeShader.Use();
 		lightCubeShader.SetUniformMatrix4fv("projection", projection);
 		lightCubeShader.SetUniformMatrix4fv("view", view);
 
@@ -1012,7 +1012,7 @@ void GLLightingTest()
 		lightCubeShader.SetUniformMatrix4fv("model", model);
 
 		glBindVertexArray(lightCubeVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, 36);*/
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -1120,6 +1120,9 @@ void TriangleTest()
 
 		return;
 	}
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	glEnable(GL_DEPTH_TEST);
 
 	float trianglesInfos[][15]
@@ -1148,7 +1151,7 @@ void TriangleTest()
 	Texture2D tex;
 	tex.Generate(width, height, data);
 	
-	Shader s("TriangleVertex.glsl", "TriangleFragment.glsl");
+	Shader s("TriangleLightVertex.glsl", "TriangleLightFragment.glsl");
 	s.Use();
 	s.SetUniformInt("texture1", 0);
 
@@ -1188,7 +1191,8 @@ void TriangleTest()
 
 		if (full)
 		{
-			t.Draw(camera);
+			//t.Draw(camera);
+			t.ColorDraw(camera);
 			for (int i = 0; i < 3; i++)
 			{
 				ts[i].Draw(camera);
