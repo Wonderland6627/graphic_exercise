@@ -1120,30 +1120,26 @@ void TriangleTest()
 
 		return;
 	}
+	glEnable(GL_DEPTH_TEST);
 
-	Vector* target = GetVectorsArray(0);
-
-	Vector points[] =
+	float trianglesInfos[][15]
 	{
-		Vector(0,0,0),
-		Vector(1,0,0),
-		Vector(1,1,0),
-
-		Vector(0,0,0),
-		Vector(1,0,0),
-		Vector(1,1,0),
-
-	}; 
-	/*Vector points2[] =
-	{
-		Vector(-0.7,0.2,0.5),
-		Vector(0.1,-0.3,-0.7),
-		Vector(0.5,1,0.03),
-		
-		Vector(0,0,0),
-		Vector(1,0,0),
-		Vector(0.5,1,0),
-	};*/
+		{	
+			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+			 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 
+		},
+		{
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		},
+		{
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		},
+	};
 
 	int width;
 	int height;
@@ -1156,7 +1152,21 @@ void TriangleTest()
 	s.Use();
 	s.SetUniformInt("texture1", 0);
 
-	Triangle t(s, tex);
+	Triangle ts[3]
+	{
+		Triangle(s, tex, trianglesInfos[0]),
+		Triangle(s, tex, trianglesInfos[1]),
+		Triangle(s, tex, trianglesInfos[2]),
+	};
+
+	float t11[]
+	{
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	};
+
+	Triangle t(s, tex, t11);
 
 	bool full = 1;
 
@@ -1179,10 +1189,18 @@ void TriangleTest()
 		if (full)
 		{
 			t.Draw(camera);
+			for (int i = 0; i < 3; i++)
+			{
+				ts[i].Draw(camera);
+			}
 		}
 		else
 		{
 			t.DrawLine(camera);
+			for (int i = 0; i < 3; i++)
+			{
+				ts[i].DrawLine(camera);
+			}
 		}
 
 		glfwSwapBuffers(window);
@@ -1190,47 +1208,4 @@ void TriangleTest()
 	}
 
 	glfwTerminate();
-}
-
-unsigned int LoadTexture(const char* texName)
-{
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-
-	int width, height, nrComponents;
-	unsigned char* data = stbi_load(texName, &width, &height, &nrComponents, 0);
-	if (data)
-	{
-		GLenum format;
-		if (nrComponents == 1)
-		{
-			format = GL_RED;
-		}
-		else if (nrComponents == 3)
-		{
-			format = GL_RGB;
-		}
-		else if (nrComponents == 4)
-		{
-			format = GL_RGBA;
-		}
-
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		stbi_image_free(data);
-	}
-	else
-	{
-		std::cout << "Texture failed to load at path: " << texName << std::endl;
-		stbi_image_free(data);
-	}
-
-	return textureID;
 }
