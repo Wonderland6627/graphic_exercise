@@ -1,27 +1,26 @@
 ﻿  main.cpp
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(487,21): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(694,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(777,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(778,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(782,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(783,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(785,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(786,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(793,28): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(934,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(960,35): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(502,21): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(709,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(792,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(793,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(797,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(798,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(800,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(801,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(808,28): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(949,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(975,35): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
           with
           [
               T=float
           ]
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(961,39): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(976,39): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
           with
           [
               T=float
           ]
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1073,22): warning C4305: “参数”: 从“double”到“float”截断
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1074,23): warning C4305: “参数”: 从“double”到“float”截断
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1075,20): warning C4305: “参数”: 从“double”到“float”截断
-D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1095,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-LINK : warning LNK4098: 默认库“MSVCRT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1165,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1091): warning C4172: 返回局部变量或临时变量的地址: ids
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(1111): warning C4172: 返回局部变量或临时变量的地址: vecs
+D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\GLTest\main.cpp(74): warning C4715: “Input::GetKetDown”: 不是所有的控件路径都返回值
   GLTest.vcxproj -> D:\Longtu\Graphic_Exercise\graphic_exercise\GLTest\Debug\GLTest.exe

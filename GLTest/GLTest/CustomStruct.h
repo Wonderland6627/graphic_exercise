@@ -243,74 +243,52 @@ Matrix operator * (const Matrix& m1, const Matrix& m2)
 
 #pragma endregion
 
-#pragma region Triangle
+#pragma region Texture2D
 
-class Triangle
+class Texture2D
 {
 public:
-	Vector points[18];
-	int length;
+	GLuint ID;
+	unsigned int Width;
+	unsigned int Height;
+	unsigned int Internal_Format;
+	unsigned int Image_Format;
+	unsigned int Wrap_S;
+	unsigned int Wrap_T;
+	unsigned int Filter_Min;
+	unsigned int Filter_Max;
 
-	unsigned int VAO;
-	unsigned int VBO;
-
-	Triangle(Vector* points, int length)
+	Texture2D()
+		: Width(0), Height(0)
+		, Internal_Format(GL_RGB), Image_Format(GL_RGB)
+		, Wrap_S(GL_REPEAT), Wrap_T(GL_REPEAT)
+		, Filter_Min(GL_LINEAR), Filter_Max(GL_LINEAR)
 	{
-		this->length = length;
-		for (int i = 0; i < length; i++)
-		{
-			this->points[i] = points[i];
-		}
+		glGenTextures(1, &ID);
 	}
 
-	void InitTriangle()
+	void Generate(unsigned int width, unsigned int height, unsigned char* data)
 	{
-		float vertices[] =
-		{
-			points[0].x, points[0].y, points[0].z,	points[3].x, points[3].y, points[3].z,
-			points[1].x, points[1].y, points[1].z,	points[4].x, points[4].y, points[4].z,
-			points[2].x, points[2].y, points[2].z,	points[5].x, points[5].y, points[5].z,
-		};
+		this->Width = width;
+		this->Height = height;
 
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
-
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(1);
+		glBindTexture(GL_TEXTURE_2D, ID);
+		glTexImage2D(GL_TEXTURE_2D, 0, this->Internal_Format, width, height, 0, this->Image_Format, GL_UNSIGNED_BYTE, data);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->Wrap_S);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->Wrap_T);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->Filter_Min);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->Filter_Max);
+		
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void DrawTriangle()
+	void Bind() const
 	{
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindTexture(GL_TEXTURE_2D, ID);
 	}
-
-	void DrawLine()
-	{
-		glBindVertexArray(VAO);
-		glLineWidth(2);
-		glDrawArrays(GL_LINE_LOOP, 0, 3);
-	}
-
-	void Clear() 
-	{
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-	}
-
 private:
-	float* GetVectorsArray() 
-	{
 
-	}
 };
 
 #pragma endregion
@@ -435,7 +413,7 @@ public:
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
 			ProcessKeyboard(Forward, deltaTime);
-		}	
+		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
 			ProcessKeyboard(Backward, deltaTime);
@@ -462,10 +440,82 @@ private:
 
 		glm::vec3 glmRight = glm::normalize(glm::cross(this->front.Toglmvec3(), worldUp.Toglmvec3()));
 		glm::vec3 glmUp = glm::normalize(glm::cross(right.Toglmvec3(), this->front.Toglmvec3()));
-		
+
 		right = Vector::ToVector(glmRight);
 		up = Vector::ToVector(glmUp);
 	}
+};
+
+#pragma endregion
+
+#pragma region Triangle
+
+class Triangle
+{
+public:
+
+	Shader shader;
+	Texture2D texture;
+	GLuint VAO;
+
+	Triangle(Shader& shader, Texture2D& texture)
+	{
+		this->shader = shader;
+		this->texture = texture;
+		InitTriangle();
+	}
+
+	void InitTriangle()
+	{
+		GLuint VBO;
+		GLfloat vertices[] =
+		{
+			// Œª÷√     // Œ∆¿Ì
+			0.0f, 1.0f, 0.0f, 1.0f,
+			1.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 0.0f,
+
+			//0.0f, 1.0f, 0.0f, 1.0f,
+			//1.0f, 1.0f, 1.0f, 1.0f,
+			//1.0f, 0.0f, 1.0f, 0.0f
+		};
+
+		glGenVertexArrays(1, &VAO);
+		glGenBuffers(1, &VBO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		glBindVertexArray(VAO);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+		glBindVertexArray(0);
+	}
+
+	void Draw(Camera& camera)
+	{
+		glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)800 / (float)800, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 model = glm::mat4(1.0f);
+
+		shader.Use();
+		shader.SetUniformInt("texture1", 0);
+		shader.SetUniformMatrix4fv("projection", projection);
+		shader.SetUniformMatrix4fv("view", view);
+		shader.SetUniformMatrix4fv("model", model);
+
+		glActiveTexture(GL_TEXTURE0);
+		texture.Bind();
+
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+	}
+
+private:
+	
 };
 
 #pragma endregion

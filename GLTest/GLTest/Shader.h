@@ -18,6 +18,11 @@ class Shader
 public:
 	unsigned int ID;//≥Ã–ÚID
 
+	Shader()
+	{
+		
+	}
+
 	Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	{
 		string vertexCode;
