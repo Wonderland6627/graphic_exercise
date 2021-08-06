@@ -475,9 +475,9 @@ public:
 			1.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 0.0f,
 
-			//0.0f, 1.0f, 0.0f, 1.0f,
-			//1.0f, 1.0f, 1.0f, 1.0f,
-			//1.0f, 0.0f, 1.0f, 0.0f
+			0.0f, 1.0f, 0.0f, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			1.0f, 0.0f, 1.0f, 0.0f
 		};
 
 		glGenVertexArrays(1, &VAO);
@@ -512,6 +512,23 @@ public:
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
+	}
+
+	void DrawLine(Camera& camera)
+	{
+		glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)800 / (float)800, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 model = glm::mat4(1.0f);
+
+		shader.Use();
+		shader.SetUniformInt("texture1", 0);
+		shader.SetUniformMatrix4fv("projection", projection);
+		shader.SetUniformMatrix4fv("view", view);
+		shader.SetUniformMatrix4fv("model", model);
+
+		glBindVertexArray(VAO);
+		glLineWidth(2);
+		glDrawArrays(GL_LINE_LOOP, 0, 6);
 	}
 
 private:

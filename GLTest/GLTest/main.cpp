@@ -1158,7 +1158,7 @@ void TriangleTest()
 
 	Triangle t(s, tex);
 
-	bool full = false;
+	bool full = 1;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -1171,8 +1171,6 @@ void TriangleTest()
 
 		ClearScreen();
 
-		t.Draw(camera);
-
 		if (Input::GetKetDown(GLFW_KEY_Q))
 		{
 			full = !full;
@@ -1180,11 +1178,11 @@ void TriangleTest()
 
 		if (full)
 		{
-			
+			t.Draw(camera);
 		}
 		else
 		{
-			
+			t.DrawLine(camera);
 		}
 
 		glfwSwapBuffers(window);
