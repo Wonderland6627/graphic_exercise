@@ -22,7 +22,23 @@ namespace DrawTest1
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            label1.Text = checkBox1.Checked.ToString();
+
+        }
+
+        private void PaintPoint(object sender, PaintEventArgs e)
+        {
+            Bitmap buffer = new Bitmap(rendererPanel.Width, rendererPanel.Height);
+            System.Drawing.Color c = System.Drawing.Color.FromArgb(255, 100, 200, 255);
+
+            for (int i = 0; i < 400; i++)
+            {
+                for (int j = 0; j < 100; j++)
+                {
+                    buffer.SetPixel(i, j, c);
+                }
+            }
+
+            e.Graphics.DrawImage(buffer, 0, 0);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace DrawTest1
         private void InitializeComponent()
         {
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.rendererPanel = new DrawTest1.RendererPanel();
             this.SuspendLayout();
             // 
             // checkBox1
@@ -44,21 +44,20 @@ namespace DrawTest1
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // label1
+            // rendererPanel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(102, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "开关";
+            this.rendererPanel.Location = new System.Drawing.Point(28, 56);
+            this.rendererPanel.Name = "rendererPanel";
+            this.rendererPanel.Size = new System.Drawing.Size(652, 382);
+            this.rendererPanel.TabIndex = 2;
+            this.rendererPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintPoint);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 600);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(800, 471);
+            this.Controls.Add(this.rendererPanel);
             this.Controls.Add(this.checkBox1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -71,7 +70,7 @@ namespace DrawTest1
         #endregion
 
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Label label1;
+        private RendererPanel rendererPanel;
     }
 }
 
