@@ -60,7 +60,17 @@ namespace DrawTest1.CustomMath
                                left.x * right.y - left.y * right.x);
         }
 
-        public static Vector3 operator + (Vector3 left, Vector3 right)
+        public static Vector3 TransformCoordinate(Vector3 coord, Matrix transMatrix)
+        {
+            var x = coord.x * transMatrix[0, 0] + coord.y * transMatrix[1, 0] + coord.z * transMatrix[2, 0] + transMatrix[3, 0];
+            var y = coord.x * transMatrix[0, 1] + coord.y * transMatrix[1, 1] + coord.z * transMatrix[2, 1] + transMatrix[3, 1];
+            var z = coord.x * transMatrix[0, 2] + coord.y * transMatrix[1, 2] + coord.z * transMatrix[2, 2] + transMatrix[3, 2];
+            var w = coord.x * transMatrix[0, 3] + coord.y * transMatrix[1, 3] + coord.z * transMatrix[2, 3] + transMatrix[3, 3];
+
+            return new Vector3(x / w, y / w, z / w);
+        }
+
+        public static Vector3 operator +(Vector3 left, Vector3 right)
         {
             return new Vector3(left.x + right.x, left.y + right.y, left.z + right.z);
         }
@@ -70,7 +80,7 @@ namespace DrawTest1.CustomMath
             return new Vector3(left.x - right.x, left.y - right.y, left.z - right.z);
         }
 
-        public static Vector3 operator * (Vector3 vector, float multi)
+        public static Vector3 operator *(Vector3 vector, float multi)
         {
             return new Vector3(vector.x * multi, vector.y * multi, vector.z * multi);
         }

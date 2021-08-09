@@ -7,3 +7,4 @@ D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest1\DrawTest1\obj\Debug\DrawTe
 D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest1\DrawTest1\obj\Debug\DrawTest1.pdb
 D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest1\DrawTest1\obj\Debug\DrawTest1.Form1.resources
 D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest1\DrawTest1\obj\Debug\DrawTest1.RendererPanel.resources
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest1\DrawTest1\obj\Debug\DrawTest1.csproj.AssemblyReference.cache

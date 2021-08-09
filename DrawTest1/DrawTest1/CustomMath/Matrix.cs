@@ -59,16 +59,20 @@ namespace DrawTest1.CustomMath
             }
         }
 
-        public static Matrix Identity = new Matrix
+        public static Matrix Identity
         {
-            matrix =
+            get
             {
-                [0, 0] = 1,
-                [1, 1] = 1,
-                [2, 2] = 1,
-                [3, 3] = 1
+                Matrix matrix = new Matrix();
+
+                matrix[0, 0] = 1;
+                matrix[1, 1] = 1;
+                matrix[2, 2] = 1;
+                matrix[3, 3] = 1;
+
+                return matrix;
             }
-        };
+        }
 
         /// <summary>
         /// 视锥矩阵
@@ -116,6 +120,17 @@ namespace DrawTest1.CustomMath
             matrix[2, 2] = zFar / (zFar - zNear);
             matrix[2, 3] = 1;
             matrix[3, 2] = -zNear * zFar / (zFar - zNear);
+
+            return matrix;
+        }
+
+        public static Matrix Translation(Vector3 vector)
+        {
+            var matrix = Identity;
+
+            matrix[3, 0] = vector.x;
+            matrix[3, 1] = vector.y;
+            matrix[3, 2] = vector.z;
 
             return matrix;
         }
