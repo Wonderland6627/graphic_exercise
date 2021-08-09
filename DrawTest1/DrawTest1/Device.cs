@@ -38,18 +38,26 @@ namespace DrawTest1
                 var world = Matrix.Translation(mesh.position);
                 var transformMatrix = world * view * projection;
 
-                /*foreach (Triangle triangle in mesh.triangles)
+                foreach (Triangle triangle in mesh.triangles)
                 {
                     var vertexA = mesh.vertices[triangle.a];
                     var vertexB = mesh.vertices[triangle.b];
                     var vertexC = mesh.vertices[triangle.c];
-                }*/
 
-                foreach (var vertex in mesh.vertices)
+                    var pointA = Project(vertexA, transformMatrix);
+                    var pointB = Project(vertexB, transformMatrix);
+                    var pointC = Project(vertexC, transformMatrix);
+
+                    DrawLine(pointA, pointB);
+                    DrawLine(pointB, pointC);
+                    DrawLine(pointC, pointA);
+                }
+
+                /*foreach (var vertex in mesh.vertices)
                 {
                     var point = Project(vertex, transformMatrix);
                     DrawPoint(point);
-                }
+                }*/
             }
         }
 
@@ -67,6 +75,21 @@ namespace DrawTest1
             if (point.x >= 0 && point.y >= 0 && point.x < bitmap.Width && point.y < bitmap.Height)
             {
                 SetPixel((int)point.x, (int)point.y, Color.Yellow);
+            }
+        }
+
+        public void DrawLine(Vector3 point1, Vector3 point2)
+        {
+            float x = point1.x;
+            float y = point1.y;
+            int maxAbs = (int)Math.Max(Math.Abs(point1.x - point2.x), Math.Abs(point1.y - point2.y));
+            float xIncre = (point2.x - point1.x) / maxAbs;
+            float yIncre = (point2.y - point1.y) / maxAbs;
+            for (int i = 0; i < maxAbs; i++)
+            {
+                SetPixel((int)x, (int)y, Color.Blue);
+                x += xIncre;
+                y += yIncre;
             }
         }
 

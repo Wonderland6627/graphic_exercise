@@ -36,8 +36,22 @@ namespace DrawTest1
             mesh.vertices[6] = new Vector3(1, -1, -1);
             mesh.vertices[7] = new Vector3(-1, -1, -1);
 
+            mesh.triangles[0] = new Triangle { a = 0, b = 1, c = 2 };
+            mesh.triangles[1] = new Triangle { a = 1, b = 2, c = 3 };
+            mesh.triangles[2] = new Triangle { a = 1, b = 3, c = 6 };
+            mesh.triangles[3] = new Triangle { a = 1, b = 5, c = 6 };
+            mesh.triangles[4] = new Triangle { a = 0, b = 1, c = 4 };
+            mesh.triangles[5] = new Triangle { a = 1, b = 4, c = 5 };
+
+            mesh.triangles[6] = new Triangle { a = 2, b = 3, c = 7 };
+            mesh.triangles[7] = new Triangle { a = 3, b = 6, c = 7 };
+            mesh.triangles[8] = new Triangle { a = 0, b = 2, c = 7 };
+            mesh.triangles[9] = new Triangle { a = 0, b = 4, c = 7 };
+            mesh.triangles[10] = new Triangle { a = 4, b = 5, c = 6 };
+            mesh.triangles[11] = new Triangle { a = 4, b = 6, c = 7 };
+
             camera = new Camera();
-            camera.position = new Vector3(0, 0, 10);
+            camera.position = new Vector3(1.5f, 2.5f, 10);
             camera.target = Vector3.zero;
         }
 
