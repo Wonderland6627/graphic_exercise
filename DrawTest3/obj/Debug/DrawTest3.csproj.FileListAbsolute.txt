@@ -1,0 +1,10 @@
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\bin\Debug\DrawTest3.exe
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\bin\Debug\DrawTest3.pdb
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.csproj.AssemblyReference.cache
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.Properties.Resources.resources
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.csproj.GenerateResource.cache
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.csproj.CoreCompileInputs.cache
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.exe
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.pdb
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\bin\Debug\UnityEngine.dll
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.csproj.CopyComplete
