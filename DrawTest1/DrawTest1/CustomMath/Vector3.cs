@@ -9,6 +9,7 @@ namespace DrawTest1.CustomMath
         public float x;
         public float y;
         public float z;
+        public float w;
 
         public Vector3()
         {
@@ -26,6 +27,14 @@ namespace DrawTest1.CustomMath
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+
+        public Vector3 (float x, float y, float z, float w)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.w = w;
         }
 
         public static Vector3 zero => new Vector3(0, 0, 0);
@@ -83,6 +92,18 @@ namespace DrawTest1.CustomMath
         public static Vector3 operator *(Vector3 vector, float multi)
         {
             return new Vector3(vector.x * multi, vector.y * multi, vector.z * multi);
+        }
+
+        public static Vector3 operator *(Vector3 vector, Matrix matrix)
+        {
+            Vector3 v = new Vector3();
+
+            v.x = vector.x * matrix[0, 0] + vector.y * matrix[1, 0] + vector.z * matrix[2, 0] + vector.w * matrix[3, 0];
+            v.y = vector.x * matrix[0, 1] + vector.y * matrix[1, 1] + vector.z * matrix[2, 1] + vector.w * matrix[3, 1];
+            v.z = vector.x * matrix[0, 2] + vector.y * matrix[1, 2] + vector.z * matrix[2, 2] + vector.w * matrix[3, 2];
+            v.w = vector.x * matrix[0, 3] + vector.y * matrix[1, 3] + vector.z * matrix[2, 3] + vector.w * matrix[3, 3];
+
+            return v;
         }
     }
 }

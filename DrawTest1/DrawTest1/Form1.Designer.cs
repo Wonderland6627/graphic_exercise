@@ -31,6 +31,7 @@ namespace DrawTest1
         {
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.rendererPanel = new DrawTest1.RendererPanel();
+            this.leftMoveBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // checkBox1
@@ -42,7 +43,6 @@ namespace DrawTest1
             this.checkBox1.TabIndex = 0;
             this.checkBox1.Text = "Toggle测试";
             this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // rendererPanel
             // 
@@ -52,11 +52,22 @@ namespace DrawTest1
             this.rendererPanel.TabIndex = 2;
             this.rendererPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintPoint);
             // 
+            // leftMoveBtn
+            // 
+            this.leftMoveBtn.Location = new System.Drawing.Point(624, 12);
+            this.leftMoveBtn.Name = "leftMoveBtn";
+            this.leftMoveBtn.Size = new System.Drawing.Size(39, 23);
+            this.leftMoveBtn.TabIndex = 3;
+            this.leftMoveBtn.Text = "←";
+            this.leftMoveBtn.UseVisualStyleBackColor = true;
+            this.leftMoveBtn.Click += new System.EventHandler(this.OnLeftMoveBtnClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 471);
+            this.Controls.Add(this.leftMoveBtn);
             this.Controls.Add(this.rendererPanel);
             this.Controls.Add(this.checkBox1);
             this.Name = "Form1";
@@ -71,6 +82,7 @@ namespace DrawTest1
 
         private System.Windows.Forms.CheckBox checkBox1;
         private RendererPanel rendererPanel;
+        private System.Windows.Forms.Button leftMoveBtn;
     }
 }
 

@@ -59,6 +59,9 @@ namespace DrawTest1.CustomMath
             }
         }
 
+        /// <summary>
+        /// 单位矩阵
+        /// </summary>
         public static Matrix Identity
         {
             get

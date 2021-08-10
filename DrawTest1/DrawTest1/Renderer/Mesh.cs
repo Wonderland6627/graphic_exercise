@@ -16,7 +16,7 @@ namespace DrawTest1.Renderer
     {
         public string name;
 
-        public Vector3[] vertices;
+        public Vertex[] vertices;
 
         public Triangle[] triangles;
 
@@ -27,7 +27,7 @@ namespace DrawTest1.Renderer
         public Mesh(string name, int verticesCount, int trianglesCount)
         {
             this.name = name;
-            vertices = new Vector3[verticesCount];
+            vertices = new Vertex[verticesCount];
             triangles = new Triangle[trianglesCount];
 
             position = new Vector3();
