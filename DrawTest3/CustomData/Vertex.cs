@@ -14,7 +14,7 @@ namespace DrawTest3.CustomData
         /// <summary>
         /// 顶点位置
         /// </summary>
-        public Vector3 point;
+        public Vector3 position;
         /// <summary>
         /// 纹理坐标
         /// </summary>
@@ -23,7 +23,7 @@ namespace DrawTest3.CustomData
         /// <summary>
         /// 顶点色
         /// </summary>
-        public Color vcolor;
+        public Color color;
         /// <summary>
         /// 法线
         /// </summary>
@@ -41,13 +41,13 @@ namespace DrawTest3.CustomData
 
         public Vertex(Vector3 point, Vector3 normal, float u, float v, float r, float g, float b)
         {
-            this.point = point;
+            this.position = point;
             this.normal = normal;
-            this.point.w = 1;
-            vcolor = new Color();
-            vcolor.R = r;
-            vcolor.G = g;
-            vcolor.B = b;
+            this.position.w = 1;
+            color = new Color();
+            color.R = r;
+            color.G = g;
+            color.B = b;
             onePerZ = 1;
             this.u = u;
             this.v = v;
@@ -59,9 +59,9 @@ namespace DrawTest3.CustomData
 
         public Vertex(Vertex vertex)
         {
-            point = vertex.point;
+            position = vertex.position;
             normal = vertex.normal;
-            this.vcolor = vertex.vcolor;
+            this.color = vertex.color;
             onePerZ = 1;
             this.u = vertex.u;
             this.v = vertex.v;

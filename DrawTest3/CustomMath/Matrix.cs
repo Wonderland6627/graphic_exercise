@@ -249,5 +249,64 @@ namespace DrawTest3.CustomMath
 
             return adj;
         }
+
+        public static Matrix Translation(Vector3 vector)
+        {
+            var matrix = Identity;
+
+            matrix[3, 0] = vector.x;
+            matrix[3, 1] = vector.y;
+            matrix[3, 2] = vector.z;
+
+            return matrix;
+        }
+
+        /// <summary>
+        /// 视锥矩阵
+        /// </summary>
+        public static Matrix LookAtLH(Vector3 cameraPosition, Vector3 cameraTarget, Vector3 cameraUpVector)
+        {
+            var zaxis = (cameraTarget - cameraPosition).Normalize();
+            var xaxis = Vector3.Cross(cameraUpVector, zaxis).Normalize();
+            var yaxis = Vector3.Cross(zaxis, xaxis);
+
+            var matrix = Identity;
+
+            matrix[0, 0] = xaxis.x;
+            matrix[1, 0] = xaxis.y;
+            matrix[2, 0] = xaxis.z;
+            matrix[3, 0] = -Vector3.Dot(xaxis, cameraPosition);
+
+            matrix[0, 1] = yaxis.x;
+            matrix[1, 1] = yaxis.y;
+            matrix[2, 1] = yaxis.z;
+            matrix[3, 1] = -Vector3.Dot(yaxis, cameraPosition);
+
+            matrix[0, 2] = zaxis.x;
+            matrix[1, 2] = zaxis.y;
+            matrix[2, 2] = zaxis.z;
+            matrix[3, 2] = -Vector3.Dot(zaxis, cameraPosition);
+
+            return matrix;
+        }
+
+        /// <summary>
+        /// 投影矩阵
+        /// </summary>
+        public static Matrix PerspectiveFovLH(float fovY, float aspectRatio, float zNear, float zFar)
+        {
+            float yScale = (float)(1f / (Math.Tan(fovY / 2)));
+            float xScale = yScale / aspectRatio;
+
+            var matrix = new Matrix();
+
+            matrix[0, 0] = xScale;
+            matrix[1, 1] = yScale;
+            matrix[2, 2] = zFar / (zFar - zNear);
+            matrix[2, 3] = 1;
+            matrix[3, 2] = -zNear * zFar / (zFar - zNear);
+
+            return matrix;
+        }
     }
 }

@@ -58,6 +58,21 @@ namespace DrawTest3.CustomMath
             return this;
         }
 
+        public string toString()
+        {
+            return string.Format("x:{0} y:{1} z:{2} w:{3}", x, y, z, w);
+        }
+
+        public static Vector3 zero => new Vector3(0, 0, 0);
+
+        public static Vector3 one => new Vector3(1, 1, 1);
+
+        public static Vector3 right => new Vector3(1, 0, 0);
+
+        public static Vector3 up => new Vector3(0, 1, 0);
+
+        public static Vector3 forward => new Vector3(0, 0, 1);
+
         public static Vector3 operator *(Vector3 lhs, Matrix rhs)
         {
             Vector3 v = new Vector3();
