@@ -70,13 +70,13 @@ namespace DrawTest3
             frameGraphics = Graphics.FromImage(frameBuffer);
             zBuffer = new float[windowSize.Width, windowSize.Height];
 
-            light = new Light(new Vector3(0, 10, 0), new CustomData.Color(1, 1, 1));
+            light = new Light(new Vector3(0, 2, 0), new CustomData.Color(1, 1, 1));
             ambientColor = new CustomData.Color(1, 1, 1);
 
             mesh = Mesh.Cube;
 
             camera = new Camera(new Vector3(5, 5, -10, 1), new Vector3(0, 0, 0, 1), new Vector3(0, 1, 0, 0)
-                             , (float)System.Math.PI / 4, this.windowSize.Width / (float)this.windowSize.Height, 1f, 500f);
+                             , (float)System.Math.PI / 4, this.windowSize.Width / (float)this.windowSize.Height, 0.1f, 500f);
         }
 
         public void InitTexture()
@@ -108,9 +108,9 @@ namespace DrawTest3
             ScreenTransform(ref v2);
             ScreenTransform(ref v3);
 
-            Console.WriteLine(v1.position.toString());
+            /*Console.WriteLine(v1.position.toString());
             Console.WriteLine(v2.position.toString());
-            Console.WriteLine(v3.position.toString());
+            Console.WriteLine(v3.position.toString());*/
 
             DrawLineDDA(v1.position, v2.position);
             DrawLineDDA(v2.position, v3.position);
@@ -422,7 +422,7 @@ namespace DrawTest3
             DrawLineDDA(new Vector3(0, 0, 0), new Vector3(50, 50, 0));
 
             Matrix model = Matrix.Translation(Vector3.one);
-            Matrix view = Matrix.LookAtLH(camera.position, camera.direction, camera.up);
+            Matrix view = Matrix.LookAtLH(camera.position, camera.forward, camera.up);
             Matrix projection = Matrix.PerspectiveFovLH(camera.fov, camera.aspectRatio, camera.zNear, camera.zFar);
 
             Draw(model, view, projection);
@@ -431,7 +431,7 @@ namespace DrawTest3
             {
                 return;
             }
-            drawGraphic.Clear(System.Drawing.Color.Black);
+            drawGraphic.Clear(System.Drawing.Color.Gray);
             drawGraphic.DrawImage(frameBuffer, 0, 0);
         }
 
@@ -453,8 +453,13 @@ namespace DrawTest3
 
         private void Clear()
         {
-            frameGraphics.Clear(System.Drawing.Color.Black);
+            frameGraphics.Clear(System.Drawing.Color.Gray);
             Array.Clear(zBuffer, 0, zBuffer.Length);
+        }
+
+        public void MoveCamera(Vector3 dir)
+        {
+            camera.Move(dir);
         }
     }
 }

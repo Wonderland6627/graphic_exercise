@@ -8,3 +8,4 @@ D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.pdb
 D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\bin\Debug\UnityEngine.dll
 D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.csproj.CopyComplete
 D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.csproj.AssemblyReference.cache
+D:\Longtu\Graphic_Exercise\graphic_exercise\DrawTest3\obj\Debug\DrawTest3.Form1.resources

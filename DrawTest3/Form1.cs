@@ -25,5 +25,35 @@ namespace DrawTest3
             device = new Device();
             device.Init(MaximumSize, drawGraphic);
         }
+        
+        private void OnUpBtnClicked(object sender, EventArgs e)
+        {
+            device.MoveCamera(new Vector3(0, 1, 0));
+        }
+
+        private void OnDownBtnClicked(object sender, EventArgs e)
+        {
+            device.MoveCamera(new Vector3(0, -1, 0));
+        }
+
+        private void OnLeftBtnClicked(object sender, EventArgs e)
+        {
+            device.MoveCamera(new Vector3(-1, 0, 0));
+        }
+
+        private void OnRightBtnClicked(object sender, EventArgs e)
+        {
+            device.MoveCamera(new Vector3(1, 0, 0));
+        }
+
+        private void OnForwardBtnClicked(object sender, EventArgs e)
+        {
+            device.MoveCamera(new Vector3(0, 0, 1));
+        }
+
+        private void OnBackBtnClicked(object sender, EventArgs e)
+        {
+            device.MoveCamera(new Vector3(0, 0, -1));
+        }
     }
 }
