@@ -74,6 +74,22 @@ namespace DrawTest3.CustomData
             return System.Drawing.Color.FromArgb((int)r, (int)g, (int)b);
         }
 
+        public static Color Lerp(Color a, Color b, float t)
+        {
+            if (t <= 0)
+            {
+                return a;
+            }
+            else if (t >= 1)
+            {
+                return b;
+            }
+            else
+            {
+                return t * b + (1 - t) * a;
+            }
+        }
+
         /// <summary>
         /// 颜色乘法，用于颜色混合，实际叫做Modulate（调制）
         /// </summary>

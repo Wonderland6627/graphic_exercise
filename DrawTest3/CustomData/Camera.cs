@@ -8,36 +8,27 @@ namespace DrawTest3.CustomData
 {
     public struct Camera
     {
-        public Vector3 pos;
-        public Vector3 lookAt;
+        public Vector3 position;
+        public Vector3 direction;
         public Vector3 up;
 
-        /// <summary>
-        /// 观察角，弧度
-        /// </summary>
         public float fov;
-        /// <summary>
-        /// 长宽比
-        /// </summary>
+
         public float aspectRatio;
-        /// <summary>
-        /// 近裁平面
-        /// </summary>
+
         public float zNear;
-        /// <summary>
-        /// 远裁平面
-        /// </summary>
+
         public float zFar;
 
-        public Camera(Vector3 pos, Vector3 lookAt, Vector3 up, float fov, float aspectRatio, float zn, float zf)
+        public Camera(Vector3 position, Vector3 direction, Vector3 up, float fov, float aspectRatio, float zNear, float zFar)
         {
-            this.pos = pos;
-            this.lookAt = lookAt;
+            this.position = position;
+            this.direction = direction;
             this.up = up;
             this.fov = fov;
             this.aspectRatio = aspectRatio;
-            this.zNear = zn;
-            this.zFar = zf;
+            this.zNear = zNear;
+            this.zFar = zFar;
         }
     }
 }
