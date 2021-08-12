@@ -82,18 +82,18 @@ namespace DrawTest3.CustomMath
 
         public static Vector3 forward => new Vector3(0, 0, 1);
 
-        public static Vector3 operator *(Vector3 lhs, Matrix rhs)
+        public static Vector3 operator +(Vector3 lhs, Vector3 rhs)
         {
             Vector3 v = new Vector3();
 
-            v.x = lhs.x * rhs[0, 0] + lhs.y * rhs[1, 0] + lhs.z * rhs[2, 0] + lhs.w * rhs[3, 0];
-            v.y = lhs.x * rhs[0, 1] + lhs.y * rhs[1, 1] + lhs.z * rhs[2, 1] + lhs.w * rhs[3, 1];
-            v.z = lhs.x * rhs[0, 2] + lhs.y * rhs[1, 2] + lhs.z * rhs[2, 2] + lhs.w * rhs[3, 2];
-            v.w = lhs.x * rhs[0, 3] + lhs.y * rhs[1, 3] + lhs.z * rhs[2, 3] + lhs.w * rhs[3, 3];
+            v.x = lhs.x + rhs.x;
+            v.y = lhs.y + rhs.y;
+            v.z = lhs.z + rhs.z;
+            v.w = 0;
 
             return v;
         }
-
+        
         public static Vector3 operator -(Vector3 lhs, Vector3 rhs)
         {
             Vector3 v = new Vector3();
@@ -106,16 +106,21 @@ namespace DrawTest3.CustomMath
             return v;
         }
 
-        public static Vector3 operator +(Vector3 lhs, Vector3 rhs)
+        public static Vector3 operator *(Vector3 lhs, Matrix rhs)
         {
             Vector3 v = new Vector3();
 
-            v.x = lhs.x + rhs.x;
-            v.y = lhs.y + rhs.y;
-            v.z = lhs.z + rhs.z;
-            v.w = 0;
+            v.x = lhs.x * rhs[0, 0] + lhs.y * rhs[1, 0] + lhs.z * rhs[2, 0] + lhs.w * rhs[3, 0];
+            v.y = lhs.x * rhs[0, 1] + lhs.y * rhs[1, 1] + lhs.z * rhs[2, 1] + lhs.w * rhs[3, 1];
+            v.z = lhs.x * rhs[0, 2] + lhs.y * rhs[1, 2] + lhs.z * rhs[2, 2] + lhs.w * rhs[3, 2];
+            v.w = lhs.x * rhs[0, 3] + lhs.y * rhs[1, 3] + lhs.z * rhs[2, 3] + lhs.w * rhs[3, 3];
 
             return v;
+        }
+
+        public static Vector3 operator *(Vector3 vector, float multi)
+        {
+            return new Vector3(vector.x * multi, vector.y * multi, vector.z * multi);
         }
 
         /// <summary>

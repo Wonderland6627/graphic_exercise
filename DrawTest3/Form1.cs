@@ -24,8 +24,21 @@ namespace DrawTest3
 
             device = new Device();
             device.Init(MaximumSize, drawGraphic);
+
+            RegistMouseEvent();
         }
-        
+
+        public void RegistMouseEvent()
+        {
+            MouseMove += OnMouseMove;
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine(e.X);
+            Console.WriteLine(e.Y);
+        }
+
         private void OnUpBtnClicked(object sender, EventArgs e)
         {
             device.MoveCamera(new Vector3(0, 1, 0));
@@ -102,6 +115,28 @@ namespace DrawTest3
         private void AmbientStrength_Click(object sender, EventArgs e)
         {
 
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.W)
+            {
+                device.MoveCamera(Camera_Movement_Type.Forward);
+            }
+            if (keyData == Keys.S)
+            {
+                device.MoveCamera(Camera_Movement_Type.Backward);
+            }
+            if (keyData == Keys.A)
+            {
+                device.MoveCamera(Camera_Movement_Type.Left);
+            }
+            if (keyData == Keys.D)
+            {
+                device.MoveCamera(Camera_Movement_Type.Right);
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }

@@ -27,6 +27,7 @@ namespace DrawTest3
     public class Device
     {
         private Bitmap texture;
+
         private Bitmap frameBuffer;
         private Graphics frameGraphics;
 
@@ -75,7 +76,7 @@ namespace DrawTest3
 
             mesh = Mesh.Cube;
 
-            camera = new Camera(new Vector3(5, 5, -10, 1), new Vector3(0, 0, 0, 1), new Vector3(0, 1, 0, 0)
+            camera = new Camera(new Vector3(0, 0, -10, 1), new Vector3(0, 0, 1, 1), new Vector3(0, 1, 0, 0)
                              , (float)System.Math.PI / 4, this.windowSize.Width / (float)this.windowSize.Height, 0.1f, 500f);
         }
 
@@ -439,8 +440,8 @@ namespace DrawTest3
         {
             Clear();
 
-            Matrix model = Matrix.Translation(Vector3.one);
-            Matrix view = Matrix.LookAtLH(camera.position, camera.forward, camera.up);
+            Matrix model = Matrix.Translation(Vector3.zero);
+            Matrix view = camera.GetViewMatrix();//Matrix.LookAtLH(camera.position, camera.forward, camera.up);
             Matrix projection = Matrix.PerspectiveFovLH(camera.fov, camera.aspectRatio, camera.zNear, camera.zFar);
 
             Draw(model, view, projection);
@@ -502,6 +503,11 @@ namespace DrawTest3
         public void ResetCamera()
         {
             camera.position = new Vector3(0, 0, -10);
+        }
+
+        public void MoveCamera(Camera_Movement_Type direction)
+        {
+            camera.Move(direction);
         }
     }
 }

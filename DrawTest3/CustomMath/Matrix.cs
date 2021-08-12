@@ -163,7 +163,7 @@ namespace DrawTest3.CustomMath
         }
 
         /// <summary>
-        /// 逆矩阵
+        /// 伴随矩阵求逆矩阵
         /// </summary>
         public Matrix Inverse()
         {
@@ -175,7 +175,7 @@ namespace DrawTest3.CustomMath
                 return null;
             }
 
-            Matrix adj = GetAdjoint();//伴随矩阵
+            Matrix adj = GetAdjoint();
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)

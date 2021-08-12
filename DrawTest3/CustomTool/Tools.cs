@@ -28,5 +28,15 @@ namespace DrawTest3.CustomTool
         {
             return Mathf.Abs(value);
         }
+
+        public static float ToRadians(this float angle)
+        {
+            return angle * (Mathf.PI / 180f);
+        }
+
+        public static double ToRadians(this double angle)
+        {
+            return angle * (Mathf.PI / 180f);
+        }
     }
 }
