@@ -55,5 +55,39 @@ namespace DrawTest3
         {
             device.MoveCamera(new Vector3(0, 0, -1));
         }
+
+        private void ResetBtn_Click(object sender, EventArgs e)
+        {
+            device.ResetCamera();
+        }
+
+        private void PointModeBtn_Click(object sender, EventArgs e)
+        {
+            device.SwitchDisplayMode(DisplayMode.Point);
+        }
+
+        private void LineModeBtn_Click(object sender, EventArgs e)
+        {
+            device.SwitchDisplayMode(DisplayMode.Line);
+        }
+
+        private void SurfaceModeBtn_Click(object sender, EventArgs e)
+        {
+            device.SwitchDisplayMode(DisplayMode.Surface);
+        }
+
+        private void TextureModeBtn_Click(object sender, EventArgs e)
+        {
+            device.SwitchDisplayMode(DisplayMode.Texture);
+        }
+
+        private void LightBtn_Click(object sender, EventArgs e)
+        {
+            bool value;
+
+            device.TurnLighting(out value);
+
+            LightBtn.Text = value ? "Lighting On" :"Lighting Off";
+        }
     }
 }

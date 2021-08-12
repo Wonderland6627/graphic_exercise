@@ -65,13 +65,18 @@ namespace DrawTest3.CustomData
         /// 转换为系统的color
         /// </summary>
         /// <returns></returns>
-        public System.Drawing.Color TransFormToSystemColor()
+        public System.Drawing.Color ToColor()
         {
             float r = this.R * 255;
             float g = this.G * 255;
             float b = this.B * 255;
 
             return System.Drawing.Color.FromArgb((int)r, (int)g, (int)b);
+        }
+
+        public string toString()
+        {
+            return string.Format("r:{0} g:{1} b:{2}", r, g, b);
         }
 
         public static Color Lerp(Color a, Color b, float t)

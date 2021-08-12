@@ -16,6 +16,14 @@ using DrawTest3.CustomTool;
 
 namespace DrawTest3
 {
+    public enum DisplayMode
+    {
+        Point,
+        Line,
+        Surface,
+        Texture,
+    }
+
     public class Device
     {
         private Bitmap texture;
@@ -33,10 +41,15 @@ namespace DrawTest3
         private Size windowSize;
         private Graphics drawGraphic;
 
+        private DisplayMode displayMode;
+        private bool lightingOn = false;
+
         public void Init(Size size, Graphics board)
         {
             windowSize = size;
             drawGraphic = board;
+
+            displayMode = DisplayMode.Surface;
 
             InitSystem();
 
@@ -49,8 +62,8 @@ namespace DrawTest3
 
         private void InitSystem()
         {
-            /*System.Drawing.Image image = System.Drawing.Image.FromFile("");
-            texture = new Bitmap(image, 256, 256);*/
+            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/wall.jpg");
+            texture = new Bitmap(image, 256, 256);
 
             /*try
             {
@@ -62,9 +75,6 @@ namespace DrawTest3
                 texture = new Bitmap(256, 256);
                 InitTexture();
             }*/
-
-            texture = new Bitmap(256, 256);
-            InitTexture();
 
             frameBuffer = new Bitmap(windowSize.Width, windowSize.Height);
             frameGraphics = Graphics.FromImage(frameBuffer);
@@ -92,9 +102,12 @@ namespace DrawTest3
 
         private void DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Matrix model, Matrix view, Matrix projection)
         {
-            GouraudLight(model, camera.position, ref v1);
-            GouraudLight(model, camera.position, ref v2);
-            GouraudLight(model, camera.position, ref v3);
+            if (lightingOn)
+            {
+                GouraudLight(model, camera.position, ref v1);
+                GouraudLight(model, camera.position, ref v2);
+                GouraudLight(model, camera.position, ref v3);
+            }
 
             ModelViewTransform(model, view, ref v1);
             ModelViewTransform(model, view, ref v2);
@@ -112,11 +125,16 @@ namespace DrawTest3
             Console.WriteLine(v2.position.toString());
             Console.WriteLine(v3.position.toString());*/
 
-            DrawLineDDA(v1.position, v2.position);
-            DrawLineDDA(v2.position, v3.position);
-            DrawLineDDA(v3.position, v1.position);
-
-            RasterizationTriangle(v1, v2, v3);
+            if (displayMode == DisplayMode.Line)
+            {
+                DrawLineDDA(v1.position, v2.position);
+                DrawLineDDA(v2.position, v3.position);
+                DrawLineDDA(v3.position, v1.position);
+            }
+            else
+            {
+                RasterizationTriangle(v1, v2, v3);
+            }
         }
 
         private void GouraudLight(Matrix model, Vector3 cameraPos, ref Vertex vertex)
@@ -376,9 +394,35 @@ namespace DrawTest3
 
                         DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
                         DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
+                        //Console.WriteLine(v1.lightingColor.toString());
 
-                        DrawTest3.CustomData.Color finalColor = texColor * lightColor;
-                        frameBuffer.SetPixel(xIndex, yIndex, System.Drawing.Color.Red /*finalColor.TransFormToSystemColor()*/);
+                        if (lightingOn)
+                        {
+                            DrawTest3.CustomData.Color finalColor;
+                            switch (displayMode)
+                            {
+                                case DisplayMode.Surface:
+                                    finalColor = vertexColor * lightColor;
+                                    frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
+                                    break;
+                                case DisplayMode.Texture:
+                                    finalColor = texColor * lightColor;
+                                    frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (displayMode)
+                            {
+                                case DisplayMode.Surface:
+                                    frameBuffer.SetPixel(xIndex, yIndex, vertexColor.ToColor());
+                                    break;
+                                case DisplayMode.Texture:
+                                    frameBuffer.SetPixel(xIndex, yIndex, texColor.ToColor());
+                                    break;
+                            }
+                        }
                     }
                 }
             }
@@ -457,9 +501,25 @@ namespace DrawTest3
             Array.Clear(zBuffer, 0, zBuffer.Length);
         }
 
+        public void SwitchDisplayMode(DisplayMode mode)
+        {
+            displayMode = mode;
+        }
+
+        public void TurnLighting(out bool value)
+        {
+            lightingOn = !lightingOn;
+            value = lightingOn;
+        }
+
         public void MoveCamera(Vector3 dir)
         {
             camera.Move(dir);
+        }
+
+        public void ResetCamera()
+        {
+            camera.position = Vector3.zero;
         }
     }
 }

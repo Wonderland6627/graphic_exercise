@@ -35,6 +35,12 @@ namespace DrawTest3
             this.UpBtn = new System.Windows.Forms.Button();
             this.ForwardBtn = new System.Windows.Forms.Button();
             this.BackBtn = new System.Windows.Forms.Button();
+            this.ResetBtn = new System.Windows.Forms.Button();
+            this.PointModeBtn = new System.Windows.Forms.Button();
+            this.LineModeBtn = new System.Windows.Forms.Button();
+            this.SurfaceModeBtn = new System.Windows.Forms.Button();
+            this.TextureModeBtn = new System.Windows.Forms.Button();
+            this.LightBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // LeftBtn
@@ -59,7 +65,7 @@ namespace DrawTest3
             // 
             // DownBtn
             // 
-            this.DownBtn.Location = new System.Drawing.Point(676, 41);
+            this.DownBtn.Location = new System.Drawing.Point(676, 70);
             this.DownBtn.Name = "DownBtn";
             this.DownBtn.Size = new System.Drawing.Size(44, 23);
             this.DownBtn.TabIndex = 2;
@@ -97,11 +103,77 @@ namespace DrawTest3
             this.BackBtn.UseVisualStyleBackColor = true;
             this.BackBtn.Click += new System.EventHandler(this.OnBackBtnClicked);
             // 
+            // ResetBtn
+            // 
+            this.ResetBtn.Location = new System.Drawing.Point(676, 41);
+            this.ResetBtn.Name = "ResetBtn";
+            this.ResetBtn.Size = new System.Drawing.Size(44, 23);
+            this.ResetBtn.TabIndex = 6;
+            this.ResetBtn.Text = "Reset";
+            this.ResetBtn.UseVisualStyleBackColor = true;
+            this.ResetBtn.Click += new System.EventHandler(this.ResetBtn_Click);
+            // 
+            // PointModeBtn
+            // 
+            this.PointModeBtn.Location = new System.Drawing.Point(676, 124);
+            this.PointModeBtn.Name = "PointModeBtn";
+            this.PointModeBtn.Size = new System.Drawing.Size(94, 23);
+            this.PointModeBtn.TabIndex = 7;
+            this.PointModeBtn.Text = "Point";
+            this.PointModeBtn.UseVisualStyleBackColor = true;
+            this.PointModeBtn.Click += new System.EventHandler(this.PointModeBtn_Click);
+            // 
+            // LineModeBtn
+            // 
+            this.LineModeBtn.Location = new System.Drawing.Point(676, 153);
+            this.LineModeBtn.Name = "LineModeBtn";
+            this.LineModeBtn.Size = new System.Drawing.Size(94, 23);
+            this.LineModeBtn.TabIndex = 8;
+            this.LineModeBtn.Text = "Line";
+            this.LineModeBtn.UseVisualStyleBackColor = true;
+            this.LineModeBtn.Click += new System.EventHandler(this.LineModeBtn_Click);
+            // 
+            // SurfaceModeBtn
+            // 
+            this.SurfaceModeBtn.Location = new System.Drawing.Point(676, 182);
+            this.SurfaceModeBtn.Name = "SurfaceModeBtn";
+            this.SurfaceModeBtn.Size = new System.Drawing.Size(94, 23);
+            this.SurfaceModeBtn.TabIndex = 9;
+            this.SurfaceModeBtn.Text = "Surface";
+            this.SurfaceModeBtn.UseVisualStyleBackColor = true;
+            this.SurfaceModeBtn.Click += new System.EventHandler(this.SurfaceModeBtn_Click);
+            // 
+            // TextureModeBtn
+            // 
+            this.TextureModeBtn.Location = new System.Drawing.Point(676, 211);
+            this.TextureModeBtn.Name = "TextureModeBtn";
+            this.TextureModeBtn.Size = new System.Drawing.Size(94, 23);
+            this.TextureModeBtn.TabIndex = 10;
+            this.TextureModeBtn.Text = "Texture";
+            this.TextureModeBtn.UseVisualStyleBackColor = true;
+            this.TextureModeBtn.Click += new System.EventHandler(this.TextureModeBtn_Click);
+            // 
+            // LightBtn
+            // 
+            this.LightBtn.Location = new System.Drawing.Point(676, 270);
+            this.LightBtn.Name = "LightBtn";
+            this.LightBtn.Size = new System.Drawing.Size(94, 23);
+            this.LightBtn.TabIndex = 11;
+            this.LightBtn.Text = "Lighting Off";
+            this.LightBtn.UseVisualStyleBackColor = true;
+            this.LightBtn.Click += new System.EventHandler(this.LightBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.LightBtn);
+            this.Controls.Add(this.TextureModeBtn);
+            this.Controls.Add(this.SurfaceModeBtn);
+            this.Controls.Add(this.LineModeBtn);
+            this.Controls.Add(this.PointModeBtn);
+            this.Controls.Add(this.ResetBtn);
             this.Controls.Add(this.BackBtn);
             this.Controls.Add(this.ForwardBtn);
             this.Controls.Add(this.UpBtn);
@@ -124,6 +196,12 @@ namespace DrawTest3
         private System.Windows.Forms.Button UpBtn;
         private System.Windows.Forms.Button ForwardBtn;
         private System.Windows.Forms.Button BackBtn;
+        private System.Windows.Forms.Button ResetBtn;
+        private System.Windows.Forms.Button PointModeBtn;
+        private System.Windows.Forms.Button LineModeBtn;
+        private System.Windows.Forms.Button SurfaceModeBtn;
+        private System.Windows.Forms.Button TextureModeBtn;
+        private System.Windows.Forms.Button LightBtn;
     }
 }
 
