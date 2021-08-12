@@ -20,7 +20,7 @@ namespace DrawTest3.CustomData
             }
             set
             {
-                r = value;
+                r = Mathf.Clamp01(value);
             }
         }
 
@@ -32,7 +32,7 @@ namespace DrawTest3.CustomData
             }
             set
             {
-                g = value;
+                g = Mathf.Clamp01(value);
             }
         }
 
@@ -44,7 +44,7 @@ namespace DrawTest3.CustomData
             }
             set
             {
-                b = value;
+                b = Mathf.Clamp01(value);
             }
         }
 
@@ -61,10 +61,7 @@ namespace DrawTest3.CustomData
             this.g = Mathf.Clamp01((float)c.G / 255);
             this.b = Mathf.Clamp01((float)c.B / 255);
         }
-        /// <summary>
-        /// 转换为系统的color
-        /// </summary>
-        /// <returns></returns>
+
         public System.Drawing.Color ToColor()
         {
             float r = this.R * 255;
@@ -81,22 +78,11 @@ namespace DrawTest3.CustomData
 
         public static Color Lerp(Color a, Color b, float t)
         {
-            if (t <= 0)
-            {
-                return a;
-            }
-            else if (t >= 1)
-            {
-                return b;
-            }
-            else
-            {
-                return t * b + (1 - t) * a;
-            }
+            return new Color(Mathf.Lerp(a.r, b.r, t), Mathf.Lerp(a.g, b.g, t), Mathf.Lerp(a.b, b.b, t));
         }
 
         /// <summary>
-        /// 颜色乘法，用于颜色混合，实际叫做Modulate（调制）
+        /// 颜色乘法 颜色混合
         /// </summary>
         public static Color operator *(Color a, Color b)
         {
@@ -119,6 +105,7 @@ namespace DrawTest3.CustomData
 
             return c;
         }
+
         public static Color operator *(Color a, float b)
         {
             Color c = new Color();
@@ -137,6 +124,17 @@ namespace DrawTest3.CustomData
             c.R = a.R + b.R;
             c.G = a.G + b.G;
             c.B = a.B + b.B;
+
+            return c;
+        }
+
+        public static Color operator -(Color a, Color b)
+        {
+            Color c = new Color();
+
+            c.R = a.R - b.R;
+            c.G = a.G - b.G;
+            c.B = a.B - b.B;
 
             return c;
         }

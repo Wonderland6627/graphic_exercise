@@ -89,5 +89,19 @@ namespace DrawTest3
 
             LightBtn.Text = value ? "Lighting On" :"Lighting Off";
         }
+
+        private void OnAmbientStrengthInputValueChnaged(object sender, EventArgs e)
+        {
+            float ambient = float.Parse(AmbientStrengthInput.Text);
+            ambient = UnityEngine.Mathf.Clamp01(ambient);
+            device.SetAmbientStrength(ambient);
+
+            AmbientStrengthInput.Text = ambient.ToString();
+        }
+
+        private void AmbientStrength_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

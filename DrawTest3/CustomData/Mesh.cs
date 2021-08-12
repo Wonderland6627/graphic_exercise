@@ -20,21 +20,12 @@ namespace DrawTest3.CustomData
             get { return vertices; }
         }
 
-        private Material material;
-        /// <summary>
-        /// 材质
-        /// </summary>
-        public Material Material
-        {
-            get { return material; }
-        }
-
         public Mesh()
         {
 
         }
 
-        public Mesh(Vector3[] points, int[] indexs, Vector2[] uvs, Color[] colors, Vector3[] normals, Material mat)
+        public Mesh(Vector3[] points, int[] indexs, Vector2[] uvs, Color[] colors, Vector3[] normals)
         {
             vertices = new Vertex[indexs.Length];
 
@@ -44,8 +35,6 @@ namespace DrawTest3.CustomData
                 Vector3 point = points[pointIndex];
                 vertices[i] = new Vertex(point, normals[i], uvs[i].x, uvs[i].y, colors[i].R, colors[i].G, colors[i].B);
             }
-
-            material = mat;
         }
 
         public static Mesh Cube
@@ -149,7 +138,7 @@ namespace DrawTest3.CustomData
                      new Vector3( 0, 1, 0 ), new Vector3(0, 1, 0), new Vector3( 0, 1, 0),
                 };
 
-                Mesh cube = new Mesh(points, indexs, uvs, colors, normals, new Material());
+                Mesh cube = new Mesh(points, indexs, uvs, colors, normals);
 
                 return cube;
             }
@@ -191,7 +180,7 @@ namespace DrawTest3.CustomData
                      new Vector3( 0, 0, -1), new Vector3( 0, 0, -1), new Vector3( 0, 0, -1),
                 };
 
-                Mesh plane = new Mesh(points, indexs, uvs, colors, normals, new Material());
+                Mesh plane = new Mesh(points, indexs, uvs, colors, normals);
 
                 return plane;
             }

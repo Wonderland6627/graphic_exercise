@@ -36,7 +36,9 @@ namespace DrawTest3
         private Camera camera;
 
         private Light light;
-        private DrawTest3.CustomData.Color ambientColor;//环境光颜色
+        float ambientStrength = 0.1f;
+        float diffuseStrength = 0.3f;
+        float specularStrength = 1f;
 
         private Size windowSize;
         private Graphics drawGraphic;
@@ -65,39 +67,16 @@ namespace DrawTest3
             System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/wall.jpg");
             texture = new Bitmap(image, 256, 256);
 
-            /*try
-            {
-                System.Drawing.Image img = System.Drawing.Image.FromFile("../../Texture/texture.jpg");
-                texture = new Bitmap(img, 256, 256);
-            }
-            catch (Exception)
-            {
-                texture = new Bitmap(256, 256);
-                InitTexture();
-            }*/
-
             frameBuffer = new Bitmap(windowSize.Width, windowSize.Height);
             frameGraphics = Graphics.FromImage(frameBuffer);
             zBuffer = new float[windowSize.Width, windowSize.Height];
 
-            light = new Light(new Vector3(0, 2, 0), new CustomData.Color(1, 1, 1));
-            ambientColor = new CustomData.Color(1, 1, 1);
+            light = new Light(new Vector3(5, 5, -5), new CustomData.Color(1, 1, 1));
 
             mesh = Mesh.Cube;
 
             camera = new Camera(new Vector3(5, 5, -10, 1), new Vector3(0, 0, 0, 1), new Vector3(0, 1, 0, 0)
                              , (float)System.Math.PI / 4, this.windowSize.Width / (float)this.windowSize.Height, 0.1f, 500f);
-        }
-
-        public void InitTexture()
-        {
-            for (int i = 0; i < 256; i++)
-            {
-                for (int j = 0; j < 256; j++)
-                {
-                    texture.SetPixel(i, j, ((i + j) % 32 == 0) ? System.Drawing.Color.White : System.Drawing.Color.Green);
-                }
-            }
         }
 
         private void DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Matrix model, Matrix view, Matrix projection)
@@ -125,15 +104,20 @@ namespace DrawTest3
             Console.WriteLine(v2.position.toString());
             Console.WriteLine(v3.position.toString());*/
 
-            if (displayMode == DisplayMode.Line)
+            switch (displayMode)
             {
-                DrawLineDDA(v1.position, v2.position);
-                DrawLineDDA(v2.position, v3.position);
-                DrawLineDDA(v3.position, v1.position);
-            }
-            else
-            {
-                RasterizationTriangle(v1, v2, v3);
+                case DisplayMode.Point:
+
+                    break;
+                case DisplayMode.Line:
+                    DrawLineDDA(v1, v2);
+                    DrawLineDDA(v2, v3);
+                    DrawLineDDA(v3, v1);
+                    break;
+                case DisplayMode.Surface:
+                case DisplayMode.Texture:
+                    RasterizationTriangle(v1, v2, v3);
+                    break;
             }
         }
 
@@ -143,15 +127,12 @@ namespace DrawTest3
             Vector3 normal = vertex.normal * model.Inverse().Transpose();
             normal = normal.Normalize();//世界空间法线
 
-            float ambientStrength = 0.1f;
-            DrawTest3.CustomData.Color ambientColor = ambientStrength * this.ambientColor;//环境光
+            DrawTest3.CustomData.Color ambientColor = ambientStrength * light.lightColor;//环境光
 
-            float diffuseStrength = 0.1f;
             Vector3 lightDir = (light.worldPosition - worldPoint).Normalize();
             float diffuse = Math.Max(Vector3.Dot(normal, lightDir), 0);
             DrawTest3.CustomData.Color diffuseColor = diffuseStrength * diffuse * light.lightColor;//漫反射
 
-            float specularStrength = 0.5f;
             Vector3 viewDir = (cameraPos - worldPoint).Normalize();
             Vector3 reflectDir = (viewDir + lightDir).Normalize();
             float specular = UnityEngine.Mathf.Pow(UnityEngine.Mathf.Clamp01(Vector3.Dot(reflectDir, normal)), 32);
@@ -292,7 +273,7 @@ namespace DrawTest3
 
         private void FillTopTriangle(Vertex v1, Vertex v2, Vertex v3)
         {
-            for (var y = v1.position.y; y <= v3.position.y; y += 0.5f)
+            for (var y = v1.position.y; y < v3.position.y; y++)
             {
                 int yIndex = (int)Math.Round(y, MidpointRounding.AwayFromZero);
                 if (yIndex >= 0 && yIndex < windowSize.Height)
@@ -325,7 +306,7 @@ namespace DrawTest3
 
         private void FillBottomTriangle(Vertex v1, Vertex v2, Vertex v3)
         {
-            for (var y = v1.position.y; y <= v2.position.y; y += 0.5f)
+            for (var y = v1.position.y; y < v2.position.y; y++)
             {
                 int yIndex = (int)Math.Round(y, MidpointRounding.AwayFromZero);
                 if (yIndex >= 0 && yIndex < windowSize.Height)
@@ -359,9 +340,8 @@ namespace DrawTest3
         private void Scanline(Vertex v1, Vertex v2, int yIndex)
         {
             float lineX = v2.position.x - v1.position.x;
-            float step = 1 / lineX;
 
-            for (var x = v1.position.x; x <= v2.position.x; x += 0.5f)
+            for (var x = v1.position.x; x <= v2.position.x; x++)
             {
                 int xIndex = (int)(x + 0.5f);
                 if (xIndex > 0 && xIndex < windowSize.Width)
@@ -376,25 +356,15 @@ namespace DrawTest3
                         float u = Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1);
                         float v = Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1);
 
-                        DrawTest3.CustomData.Color texColor = new CustomData.Color(1, 1, 1);
-                        if (true)
-                        {
-                            int uIndex = (int)Math.Round(u, MidpointRounding.AwayFromZero);
-                            int vIndex = (int)Math.Round(v, MidpointRounding.AwayFromZero);
+                        int uIndex = (int)Math.Round(u, MidpointRounding.AwayFromZero);
+                        int vIndex = (int)Math.Round(v, MidpointRounding.AwayFromZero);
 
-                            uIndex = Mathf.Clamp(uIndex, 0, texture.Width - 1);
-                            vIndex = Mathf.Clamp(vIndex, 0, texture.Height - 1);
+                        uIndex = Mathf.Clamp(uIndex, 0, texture.Width - 1);
+                        vIndex = Mathf.Clamp(vIndex, 0, texture.Height - 1);
 
-                            texColor = new CustomData.Color(GetTexturePixel(uIndex, vIndex));
-                        }
-                        else
-                        {
-
-                        }
-
+                        DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel(uIndex, vIndex));
                         DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
                         DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
-                        //Console.WriteLine(v1.lightingColor.toString());
 
                         if (lightingOn)
                         {
@@ -436,19 +406,28 @@ namespace DrawTest3
             return texture.GetPixel(u, v);
         }
 
-        private void DrawLineDDA(Vector3 point1, Vector3 point2)
+        private void DrawLineDDA(Vertex vertex1, Vertex vertex2)
         {
-            float x = point1.x;
-            float y = point1.y;
-            int maxAbs = (int)Math.Max(Math.Abs(point1.x - point2.x), Math.Abs(point1.y - point2.y));
-            float xIncre = (point2.x - point1.x) / maxAbs;
-            float yIncre = (point2.y - point1.y) / maxAbs;
+            float x = vertex1.position.x;
+            float y = vertex1.position.y;
+
+            float lengthX = Math.Abs(vertex1.position.x - vertex2.position.x);
+            float lengthY = Math.Abs(vertex1.position.y - vertex2.position.y);
+            int maxAbs = (int)Math.Max(lengthX, lengthY);
+
+            float xIncre = (vertex2.position.x - vertex1.position.x) / maxAbs;
+            float yIncre = (vertex2.position.y - vertex1.position.y) / maxAbs;
 
             for (int i = 0; i < maxAbs; i++)
             {
+                float lerpT = (maxAbs - vertex1.position.x) / lengthX;
+                float onPreZ = Mathf.Lerp(vertex1.onePerZ, vertex2.onePerZ, lerpT);
+                float w = 1 / onPreZ;
+
                 if (x >= 0 && y >= 0 && x < windowSize.Width && y < windowSize.Height)
                 {
-                    frameBuffer.SetPixel((int)x, (int)y, System.Drawing.Color.Orange);
+                    DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(vertex1.color, vertex2.color, lerpT.Abs()) * w;
+                    frameBuffer.SetPixel((int)x, (int)y, vertexColor.ToColor());
                 }
 
                 x += xIncre;
@@ -459,11 +438,6 @@ namespace DrawTest3
         private void Draw()
         {
             Clear();
-
-            frameBuffer.SetPixel(100, 50, System.Drawing.Color.Red);
-
-            var vs = mesh.Vertices;
-            DrawLineDDA(new Vector3(0, 0, 0), new Vector3(50, 50, 0));
 
             Matrix model = Matrix.Translation(Vector3.one);
             Matrix view = Matrix.LookAtLH(camera.position, camera.forward, camera.up);
@@ -512,6 +486,14 @@ namespace DrawTest3
             value = lightingOn;
         }
 
+        /// <summary>
+        /// 设置环境光
+        /// </summary>
+        public void SetAmbientStrength(float value)
+        {
+            ambientStrength = value;
+        }
+
         public void MoveCamera(Vector3 dir)
         {
             camera.Move(dir);
@@ -519,7 +501,7 @@ namespace DrawTest3
 
         public void ResetCamera()
         {
-            camera.position = Vector3.zero;
+            camera.position = new Vector3(0, 0, -10);
         }
     }
 }

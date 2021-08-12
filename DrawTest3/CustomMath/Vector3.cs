@@ -5,9 +5,18 @@ using System.Text;
 
 namespace DrawTest3.CustomMath
 {
-    /// <summary>
-    /// 行向量
-    /// </summary>
+    public struct Vector2
+    {
+        public float x;
+        public float y;
+
+        public Vector2(float x, float y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     public struct Vector3
     {
         public float x;

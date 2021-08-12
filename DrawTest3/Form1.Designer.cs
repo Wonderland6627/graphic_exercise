@@ -41,6 +41,8 @@ namespace DrawTest3
             this.SurfaceModeBtn = new System.Windows.Forms.Button();
             this.TextureModeBtn = new System.Windows.Forms.Button();
             this.LightBtn = new System.Windows.Forms.Button();
+            this.AmbientStrengthInput = new System.Windows.Forms.TextBox();
+            this.AmbientStrengthTxt = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // LeftBtn
@@ -155,7 +157,7 @@ namespace DrawTest3
             // 
             // LightBtn
             // 
-            this.LightBtn.Location = new System.Drawing.Point(676, 270);
+            this.LightBtn.Location = new System.Drawing.Point(676, 263);
             this.LightBtn.Name = "LightBtn";
             this.LightBtn.Size = new System.Drawing.Size(94, 23);
             this.LightBtn.TabIndex = 11;
@@ -163,11 +165,31 @@ namespace DrawTest3
             this.LightBtn.UseVisualStyleBackColor = true;
             this.LightBtn.Click += new System.EventHandler(this.LightBtn_Click);
             // 
+            // ambientStrengthInput
+            // 
+            this.AmbientStrengthInput.Location = new System.Drawing.Point(726, 292);
+            this.AmbientStrengthInput.Name = "ambientStrengthInput";
+            this.AmbientStrengthInput.Size = new System.Drawing.Size(44, 21);
+            this.AmbientStrengthInput.TabIndex = 12;
+            this.AmbientStrengthInput.Text = "0.5";
+            this.AmbientStrengthInput.TextChanged += new System.EventHandler(this.OnAmbientStrengthInputValueChnaged);
+            // 
+            // AmbientStrength
+            // 
+            this.AmbientStrengthTxt.AutoSize = true;
+            this.AmbientStrengthTxt.Location = new System.Drawing.Point(625, 297);
+            this.AmbientStrengthTxt.Name = "AmbientStrength";
+            this.AmbientStrengthTxt.Size = new System.Drawing.Size(95, 12);
+            this.AmbientStrengthTxt.TabIndex = 13;
+            this.AmbientStrengthTxt.Text = "ambientStrength";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.AmbientStrengthTxt);
+            this.Controls.Add(this.AmbientStrengthInput);
             this.Controls.Add(this.LightBtn);
             this.Controls.Add(this.TextureModeBtn);
             this.Controls.Add(this.SurfaceModeBtn);
@@ -185,6 +207,7 @@ namespace DrawTest3
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -202,6 +225,8 @@ namespace DrawTest3
         private System.Windows.Forms.Button SurfaceModeBtn;
         private System.Windows.Forms.Button TextureModeBtn;
         private System.Windows.Forms.Button LightBtn;
+        private System.Windows.Forms.TextBox AmbientStrengthInput;
+        private System.Windows.Forms.Label AmbientStrengthTxt;
     }
 }
 

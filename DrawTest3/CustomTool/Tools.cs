@@ -21,4 +21,12 @@ namespace DrawTest3.CustomTool
             vertex.lightingColor = CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, t);
         }
     }
+
+    public static class Extensions
+    {
+        public static float Abs(this float value)
+        {
+            return Mathf.Abs(value);
+        }
+    }
 }

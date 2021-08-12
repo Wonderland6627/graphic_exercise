@@ -52,11 +52,9 @@
     <Compile Include="CustomData\Camera.cs" />
     <Compile Include="CustomData\Color.cs" />
     <Compile Include="CustomData\Light.cs" />
-    <Compile Include="CustomData\Material.cs" />
     <Compile Include="CustomData\Mesh.cs" />
     <Compile Include="CustomData\Vertex.cs" />
     <Compile Include="CustomMath\Matrix.cs" />
-    <Compile Include="CustomMath\Vector2.cs" />
     <Compile Include="CustomMath\Vector3.cs" />
     <Compile Include="CustomTool\Tools.cs" />
     <Compile Include="Device.cs" />
