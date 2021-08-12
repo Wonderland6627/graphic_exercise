@@ -41,7 +41,7 @@ namespace DrawTest3.CustomData
             this.zNear = zNear;
             this.zFar = zFar;
 
-            yaw = 0;
+            yaw = -90.0f;
             pitch = 0;
             this.right = Vector3.right;
         }
@@ -75,7 +75,24 @@ namespace DrawTest3.CustomData
         float yaw;
         float pitch;
 
-        public void UpdateCameraVectors()
+        public void UpdateCameraVectors(float xOffset, float yOffset)
+        {
+            yaw += xOffset;
+            pitch += yOffset;
+
+            if (pitch > 89.0f)
+            {
+                pitch = 89.0f;
+            }
+            if (pitch < -89.0f)
+            {
+                pitch = -89.0f;
+            }
+
+            UpdateCameraVectors();
+        }
+
+        private void UpdateCameraVectors()
         {
             Vector3 front = new Vector3();
 

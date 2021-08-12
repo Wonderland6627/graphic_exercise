@@ -64,11 +64,11 @@ namespace DrawTest3.CustomData
 
         public System.Drawing.Color ToColor()
         {
-            float r = this.R * 255;
-            float g = this.G * 255;
-            float b = this.B * 255;
-
-            return System.Drawing.Color.FromArgb((int)r, (int)g, (int)b);
+            float r = this.R * 255f;
+            float g = this.G * 255f;
+            float b = this.B * 255f;
+            
+            return System.Drawing.Color.FromArgb(Mathf.CeilToInt(r), Mathf.CeilToInt(g), Mathf.CeilToInt(b));
         }
 
         public string toString()

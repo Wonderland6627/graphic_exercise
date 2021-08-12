@@ -65,7 +65,7 @@ namespace DrawTest3
 
         private void InitSystem()
         {
-            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/wall.jpg");
+            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/UV.jpg");
             texture = new Bitmap(image, 256, 256);
 
             frameBuffer = new Bitmap(windowSize.Width, windowSize.Height);
@@ -349,49 +349,52 @@ namespace DrawTest3
                 {
                     float lerpT = (x - v1.position.x) / lineX;
                     float onePerZ = UnityEngine.Mathf.Lerp(v1.onePerZ, v2.onePerZ, lerpT);
-                    if (onePerZ >= zBuffer[yIndex, xIndex])
+                    if (yIndex < zBuffer.GetLength(0) && xIndex < zBuffer.GetLength(1))
                     {
-                        float w = 1 / onePerZ;
-                        zBuffer[yIndex, xIndex] = onePerZ;
-
-                        float u = Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1);
-                        float v = Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1);
-
-                        int uIndex = (int)Math.Round(u, MidpointRounding.AwayFromZero);
-                        int vIndex = (int)Math.Round(v, MidpointRounding.AwayFromZero);
-
-                        uIndex = Mathf.Clamp(uIndex, 0, texture.Width - 1);
-                        vIndex = Mathf.Clamp(vIndex, 0, texture.Height - 1);
-
-                        DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel(uIndex, vIndex));
-                        DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
-                        DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
-
-                        if (lightingOn)
+                        if (onePerZ >= zBuffer[yIndex, xIndex])
                         {
-                            DrawTest3.CustomData.Color finalColor;
-                            switch (displayMode)
+                            float w = 1 / onePerZ;
+                            zBuffer[yIndex, xIndex] = onePerZ;
+
+                            float u = Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1);
+                            float v = Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1);
+
+                            int uIndex = (int)Math.Round(u, MidpointRounding.AwayFromZero);
+                            int vIndex = (int)Math.Round(v, MidpointRounding.AwayFromZero);
+
+                            uIndex = Mathf.Clamp(uIndex, 0, texture.Width - 1);
+                            vIndex = Mathf.Clamp(vIndex, 0, texture.Height - 1);
+
+                            DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel(uIndex, vIndex));
+                            DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
+                            DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
+
+                            if (lightingOn)
                             {
-                                case DisplayMode.Surface:
-                                    finalColor = vertexColor * lightColor;
-                                    frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
-                                    break;
-                                case DisplayMode.Texture:
-                                    finalColor = texColor * lightColor;
-                                    frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
-                                    break;
+                                DrawTest3.CustomData.Color finalColor;
+                                switch (displayMode)
+                                {
+                                    case DisplayMode.Surface:
+                                        finalColor = vertexColor * lightColor;
+                                        frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
+                                        break;
+                                    case DisplayMode.Texture:
+                                        finalColor = texColor * lightColor;
+                                        frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
+                                        break;
+                                }
                             }
-                        }
-                        else
-                        {
-                            switch (displayMode)
+                            else
                             {
-                                case DisplayMode.Surface:
-                                    frameBuffer.SetPixel(xIndex, yIndex, vertexColor.ToColor());
-                                    break;
-                                case DisplayMode.Texture:
-                                    frameBuffer.SetPixel(xIndex, yIndex, texColor.ToColor());
-                                    break;
+                                switch (displayMode)
+                                {
+                                    case DisplayMode.Surface:
+                                        frameBuffer.SetPixel(xIndex, yIndex, vertexColor.ToColor());
+                                        break;
+                                    case DisplayMode.Texture:
+                                        frameBuffer.SetPixel(xIndex, yIndex, texColor.ToColor());
+                                        break;
+                                }
                             }
                         }
                     }
@@ -438,10 +441,8 @@ namespace DrawTest3
 
         private void Draw()
         {
-            Clear();
-
             Matrix model = Matrix.Translation(Vector3.zero);
-            Matrix view = camera.GetViewMatrix();//Matrix.LookAtLH(camera.position, camera.forward, camera.up);
+            Matrix view = Matrix.LookAtLH(camera.position, camera.position + camera.forward, camera.up);
             Matrix projection = Matrix.PerspectiveFovLH(camera.fov, camera.aspectRatio, camera.zNear, camera.zFar);
 
             Draw(model, view, projection);
@@ -450,8 +451,8 @@ namespace DrawTest3
             {
                 return;
             }
-            drawGraphic.Clear(System.Drawing.Color.Gray);
             drawGraphic.DrawImage(frameBuffer, 0, 0);
+            //drawGraphic.Clear(System.Drawing.Color.Gray);
         }
 
         private void Draw(Matrix model, Matrix view, Matrix projection)
@@ -466,6 +467,8 @@ namespace DrawTest3
         {
             lock (frameBuffer)
             {
+                Clear();
+
                 Draw();
             }
         }
@@ -508,6 +511,11 @@ namespace DrawTest3
         public void MoveCamera(Camera_Movement_Type direction)
         {
             camera.Move(direction);
+        }
+
+        public void RotateCamera(float xOffset, float yOffset)
+        {
+            camera.UpdateCameraVectors(xOffset, yOffset);
         }
     }
 }

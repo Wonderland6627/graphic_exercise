@@ -209,6 +209,7 @@ namespace DrawTest3
             this.ResumeLayout(false);
             this.PerformLayout();
 
+            this.DoubleBuffered = true;
         }
 
         #endregion

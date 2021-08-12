@@ -33,10 +33,24 @@ namespace DrawTest3
             MouseMove += OnMouseMove;
         }
 
+        private int lastX = 400;
+        private int lastY = 300;
+
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            Console.WriteLine(e.X);
-            Console.WriteLine(e.Y);
+            int X = e.X;
+            int Y = e.Y;
+
+            int deltaX = X - lastX;
+            int deltaY = Y - lastY;
+
+            Console.WriteLine(deltaX);
+            Console.WriteLine(deltaY);
+
+            //device.RotateCamera(deltaX, deltaY);
+
+            lastX = X;
+            lastY = Y;
         }
 
         private void OnUpBtnClicked(object sender, EventArgs e)
