@@ -33,13 +33,14 @@ namespace DrawTest3
 
         private float[,] zBuffer;
 
-        private Mesh mesh;
+        private Mesh cubeMesh;
+        private Mesh planeMesh;
         private Camera camera;
 
         private Light light;
         float ambientStrength = 0.1f;
-        float diffuseStrength = 0.3f;
-        float specularStrength = 1f;
+        float diffuseStrength = 0.1f;
+        float specularStrength = 0.5f;
 
         private Size windowSize;
         private Graphics drawGraphic;
@@ -65,19 +66,32 @@ namespace DrawTest3
 
         private void InitSystem()
         {
-            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/UV.jpg");
+            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/wall.jpg");
             texture = new Bitmap(image, 256, 256);
 
             frameBuffer = new Bitmap(windowSize.Width, windowSize.Height);
             frameGraphics = Graphics.FromImage(frameBuffer);
             zBuffer = new float[windowSize.Width, windowSize.Height];
 
-            light = new Light(new Vector3(5, 5, -5), new CustomData.Color(1, 1, 1));
+            light = new Light(new Vector3(0, 0, -2), new CustomData.Color(1, 1, 1));
 
-            mesh = Mesh.Cube;
+            cubeMesh = Mesh.Cube;
+            planeMesh = Mesh.Plane;
 
             camera = new Camera(new Vector3(0, 0, -10, 1), new Vector3(0, 0, 1, 1), new Vector3(0, 1, 0, 0)
-                             , (float)System.Math.PI / 4, this.windowSize.Width / (float)this.windowSize.Height, 0.1f, 500f);
+                             , (float)System.Math.PI / 4, this.windowSize.Width / (float)this.windowSize.Height, 0.01f, 500f);
+        }
+
+        private bool ClipInScreen(Vertex v)
+        {
+            if (v.position.x >= -v.position.w && v.position.x <= v.position.w &&
+                v.position.y >= -v.position.w && v.position.y <= v.position.w &&
+                v.position.z >= 0f            && v.position.z <= v.position.w)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Matrix model, Matrix view, Matrix projection)
@@ -89,13 +103,18 @@ namespace DrawTest3
                 GouraudLight(model, camera.position, ref v3);
             }
 
-            ModelViewTransform(model, view, ref v1);
-            ModelViewTransform(model, view, ref v2);
-            ModelViewTransform(model, view, ref v3);
+            ModelViewProjectionTransform(model, view, projection, ref v1);
+            ModelViewProjectionTransform(model, view, projection, ref v2);
+            ModelViewProjectionTransform(model, view, projection, ref v3);
 
             ProjectionTransform(projection, ref v1);
             ProjectionTransform(projection, ref v2);
             ProjectionTransform(projection, ref v3);
+
+            if (!ClipInScreen(v1) || !ClipInScreen(v1) || !ClipInScreen(v1))
+            {
+                return;
+            }
 
             ScreenTransform(ref v1);
             ScreenTransform(ref v2);
@@ -128,7 +147,7 @@ namespace DrawTest3
             Vector3 normal = vertex.normal * model.Inverse().Transpose();
             normal = normal.Normalize();//世界空间法线
 
-            DrawTest3.CustomData.Color ambientColor = ambientStrength * light.lightColor;//环境光
+            DrawTest3.CustomData.Color ambientColor = ambientStrength * new CustomData.Color(1,1,1);//环境光
 
             Vector3 lightDir = (light.worldPosition - worldPoint).Normalize();
             float diffuse = Math.Max(Vector3.Dot(normal, lightDir), 0);
@@ -142,9 +161,9 @@ namespace DrawTest3
             vertex.lightingColor = ambientColor + diffuseColor + specularColor;
         }
 
-        private void ModelViewTransform(Matrix model, Matrix view, ref Vertex vertex)
+        private void ModelViewProjectionTransform(Matrix model, Matrix view, Matrix projection, ref Vertex vertex)
         {
-            vertex.position = vertex.position * model * view;
+            vertex.position = vertex.position * model * view * projection;
         }
 
         /// <summary>
@@ -152,8 +171,6 @@ namespace DrawTest3
         /// </summary>
         private void ProjectionTransform(Matrix projection, ref Vertex vertex)
         {
-            vertex.position = vertex.position * projection;
-
             vertex.onePerZ = 1 / vertex.position.w;
 
             vertex.u *= vertex.onePerZ;
@@ -365,7 +382,7 @@ namespace DrawTest3
                             uIndex = Mathf.Clamp(uIndex, 0, texture.Width - 1);
                             vIndex = Mathf.Clamp(vIndex, 0, texture.Height - 1);
 
-                            DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel(uIndex, vIndex));
+                            DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel(uIndex, vIndex));//纹理点采样
                             DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
                             DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
 
@@ -424,9 +441,9 @@ namespace DrawTest3
 
             for (int i = 0; i < maxAbs; i++)
             {
-                float lerpT = (maxAbs - vertex1.position.x) / lengthX;
+                float lerpT = 0.1f;//(maxAbs - vertex1.position.y) / lengthY;
                 float onPreZ = Mathf.Lerp(vertex1.onePerZ, vertex2.onePerZ, lerpT);
-                float w = 1 / onPreZ;
+                float w = 1 / onPreZ; // 9 11
 
                 if (x >= 0 && y >= 0 && x < windowSize.Width && y < windowSize.Height)
                 {
@@ -439,13 +456,18 @@ namespace DrawTest3
             }
         }
 
+        private float rot = 0;
+
         private void Draw()
         {
-            Matrix model = Matrix.Translation(Vector3.zero);
-            Matrix view = Matrix.LookAtLH(camera.position, camera.position + camera.forward, camera.up);
+            rot += 0.01f;
+
+            Matrix model =  Matrix.Translation(Vector3.zero);
+            Matrix view = camera.GetViewMatrix();//Matrix.LookAtLH(camera.position, camera.position + camera.forward, camera.up);
             Matrix projection = Matrix.PerspectiveFovLH(camera.fov, camera.aspectRatio, camera.zNear, camera.zFar);
 
-            Draw(model, view, projection);
+            Draw(model, view, projection, cubeMesh);
+            //Draw(model, view, projection, planeMesh);
 
             if (drawGraphic == null)
             {
@@ -455,7 +477,7 @@ namespace DrawTest3
             //drawGraphic.Clear(System.Drawing.Color.Gray);
         }
 
-        private void Draw(Matrix model, Matrix view, Matrix projection)
+        private void Draw(Matrix model, Matrix view, Matrix projection, Mesh mesh)
         {
             for (int i = 0; i + 2 < mesh.Vertices.Length; i += 3)
             {
@@ -503,19 +525,24 @@ namespace DrawTest3
             camera.Move(dir);
         }
 
+        public void MoveCamera(Camera_Movement_Type direction)
+        {
+            camera.Move(direction);
+        }
+        
         public void ResetCamera()
         {
             camera.position = new Vector3(0, 0, -10);
         }
 
-        public void MoveCamera(Camera_Movement_Type direction)
+        public void UpdateCameraFOV(float offset)
         {
-            camera.Move(direction);
+            camera.UpdateCameraFOV(offset);
         }
 
-        public void RotateCamera(float xOffset, float yOffset)
+        public void RotateCamera(float yaw, float pitch)
         {
-            camera.UpdateCameraVectors(xOffset, yOffset);
+            camera.UpdateCameraVectors(yaw, pitch);
         }
     }
 }

@@ -246,6 +246,41 @@ namespace DrawTest3.CustomMath
             return matrix;
         }
 
+        public static Matrix RotateX(float angle)
+        {
+            Matrix m = Identity;
+
+            m[1, 1] = (float)Math.Cos(angle);
+            m[1, 2] = -(float)Math.Sin(angle);
+
+            m[2, 1] = (float)Math.Sin(angle);
+            m[2, 2] = (float)Math.Cos(angle);
+
+            return m;
+        }
+
+        public static Matrix RotateY(float angle)
+        {
+            Matrix m = Identity;
+
+            m[0, 0] = (float)Math.Cos(angle);
+            m[0, 2] = (float)Math.Sin(angle);
+
+            m[2, 0] = -(float)Math.Sin(angle);
+            m[2, 2] = (float)Math.Cos(angle);
+
+            return m;
+        }
+
+        public Vector3 GetAxis(int axis)
+        {
+            float x = matrix[0, axis];
+            float y = matrix[1, axis];
+            float z = matrix[2, axis];
+
+            return new Vector3(x, y, z);
+        }
+
         /// <summary>
         /// 矩阵乘法
         /// </summary>

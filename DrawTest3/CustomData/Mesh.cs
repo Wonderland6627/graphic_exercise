@@ -150,10 +150,10 @@ namespace DrawTest3.CustomData
             {
                 Vector3[] points =
                 {
-                    new Vector3(-1,  1, 0),
-                    new Vector3(-1, -1, 0),
-                    new Vector3(1, -1, 0),
-                    new Vector3(1, 1, 0),
+                    new Vector3(-5, -2f, 0),
+                    new Vector3(5, -2f, 0),
+                    new Vector3(5, -2f, 50),
+                    new Vector3(-5, -2f, 50),
                 };
 
                 int[] indexs =
@@ -176,8 +176,8 @@ namespace DrawTest3.CustomData
 
                 Vector3[] normals =
                 {
-                     new Vector3( 0, 0, -1), new Vector3( 0, 0, -1), new Vector3( 0, 0, -1),
-                     new Vector3( 0, 0, -1), new Vector3( 0, 0, -1), new Vector3( 0, 0, -1),
+                     new Vector3( 0, 1, 0), new Vector3( 0, 1, 0), new Vector3( 0, 1, 0),
+                     new Vector3( 0, 1, 0), new Vector3( 0, 1, 0), new Vector3( 0, 1, 0),
                 };
 
                 Mesh plane = new Mesh(points, indexs, uvs, colors, normals);

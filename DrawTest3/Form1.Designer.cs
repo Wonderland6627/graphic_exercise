@@ -161,7 +161,7 @@ namespace DrawTest3
             this.LightBtn.Name = "LightBtn";
             this.LightBtn.Size = new System.Drawing.Size(94, 23);
             this.LightBtn.TabIndex = 11;
-            this.LightBtn.Text = "Lighting Off";
+            this.LightBtn.Text = "Lighting On";
             this.LightBtn.UseVisualStyleBackColor = true;
             this.LightBtn.Click += new System.EventHandler(this.LightBtn_Click);
             // 

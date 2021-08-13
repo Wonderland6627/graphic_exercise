@@ -31,6 +31,27 @@ namespace DrawTest3
         public void RegistMouseEvent()
         {
             MouseMove += OnMouseMove;
+            MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
+            MouseWheel += OnMouseWheel;
+        }
+
+        private bool move = false;
+
+        private void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            move = false;
+        }
+
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            move = true;
+        }
+
+        private void OnMouseWheel(object sender, MouseEventArgs e)
+        {
+            float offset = e.Delta / (1200 * 3f);
+            device.UpdateCameraFOV(offset);
         }
 
         private int lastX = 400;
@@ -38,16 +59,21 @@ namespace DrawTest3
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            if (!move)
+            {
+                return;
+            }
+
             int X = e.X;
             int Y = e.Y;
 
             int deltaX = X - lastX;
             int deltaY = Y - lastY;
 
-            Console.WriteLine(deltaX);
-            Console.WriteLine(deltaY);
+            //Console.WriteLine(deltaX);
+            //Console.WriteLine(deltaY);
 
-            //device.RotateCamera(deltaX, deltaY);
+            device.RotateCamera(deltaY * -0.1f, deltaX * -0.1f);
 
             lastX = X;
             lastY = Y;
@@ -114,16 +140,20 @@ namespace DrawTest3
 
             device.TurnLighting(out value);
 
-            LightBtn.Text = value ? "Lighting On" :"Lighting Off";
+            LightBtn.Text = value ? "Lighting Off" :"Lighting On";
         }
 
         private void OnAmbientStrengthInputValueChnaged(object sender, EventArgs e)
         {
-            float ambient = float.Parse(AmbientStrengthInput.Text);
-            ambient = UnityEngine.Mathf.Clamp01(ambient);
-            device.SetAmbientStrength(ambient);
+            float result = 0;
+            if (float.TryParse(AmbientStrengthInput.Text, out result))
+            {
+                float ambient = result;
+                ambient = UnityEngine.Mathf.Clamp01(ambient);
+                device.SetAmbientStrength(ambient);
 
-            AmbientStrengthInput.Text = ambient.ToString();
+                AmbientStrengthInput.Text = ambient.ToString();
+            }
         }
 
         private void AmbientStrength_Click(object sender, EventArgs e)
@@ -148,6 +178,23 @@ namespace DrawTest3
             if (keyData == Keys.D)
             {
                 device.MoveCamera(Camera_Movement_Type.Right);
+            }
+
+            if (keyData == Keys.J)
+            {
+                device.RotateCamera(0, 0.8f);
+            }
+            if (keyData == Keys.L)
+            {
+                device.RotateCamera(0, -0.8f);
+            }
+            if (keyData == Keys.K)
+            {
+                device.RotateCamera(-0.8f, 0);
+            }
+            if (keyData == Keys.I)
+            {
+                device.RotateCamera(0.8f, 0);
             }
 
             return base.ProcessCmdKey(ref msg, keyData);

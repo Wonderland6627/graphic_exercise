@@ -41,7 +41,7 @@ namespace DrawTest3.CustomData
             this.zNear = zNear;
             this.zFar = zFar;
 
-            yaw = -90.0f;
+            yaw = 0.0f;
             pitch = 0;
             this.right = Vector3.right;
         }
@@ -72,24 +72,34 @@ namespace DrawTest3.CustomData
             }
         }
 
+        //yaw y
+        //pitch x
+        public void Rotate(Matrix rotateMatrix)
+        {
+            right = rotateMatrix.GetAxis(0);
+            up = rotateMatrix.GetAxis(1);
+            forward = rotateMatrix.GetAxis(2);
+        }
+
         float yaw;
         float pitch;
 
-        public void UpdateCameraVectors(float xOffset, float yOffset)
+        public void UpdateCameraVectors(float yaw, float pitch)
         {
-            yaw += xOffset;
-            pitch += yOffset;
+            this.yaw += yaw * 0.01f;
+            this.pitch += pitch * 0.01f;
 
-            if (pitch > 89.0f)
+            /*if (this.pitch > 89.0f)
             {
-                pitch = 89.0f;
+                this.pitch = 89.0f;
             }
-            if (pitch < -89.0f)
+            if (this.pitch < -89.0f)
             {
-                pitch = -89.0f;
-            }
+                this.pitch = -89.0f;
+            }*/
 
-            UpdateCameraVectors();
+            Matrix rotateMatrix = Matrix.RotateX(this.yaw) * Matrix.RotateY(this.pitch);
+            Rotate(rotateMatrix);
         }
 
         private void UpdateCameraVectors()
@@ -104,6 +114,12 @@ namespace DrawTest3.CustomData
 
             right = Vector3.Cross(forward, Vector3.up).Normalize();
             up = Vector3.Cross(right, forward).Normalize();
+        }
+
+        public void UpdateCameraFOV(float offset)
+        {
+            fov += offset;
+            fov = UnityEngine.Mathf.Clamp(fov, 0, 90f);
         }
 
         public Matrix GetViewMatrix()
