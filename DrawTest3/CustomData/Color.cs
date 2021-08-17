@@ -62,6 +62,14 @@ namespace DrawTest3.CustomData
             this.b = Mathf.Clamp01((float)c.B / 255);
         }
 
+        public static Color Red
+        {
+            get
+            {
+                return new Color(1, 0, 0);
+            }
+        }
+
         public System.Drawing.Color ToColor()
         {
             float r = this.R * 255f;

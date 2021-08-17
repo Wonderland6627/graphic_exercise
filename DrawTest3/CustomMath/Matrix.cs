@@ -251,7 +251,7 @@ namespace DrawTest3.CustomMath
             Matrix m = Identity;
 
             m[1, 1] = (float)Math.Cos(angle);
-            m[1, 2] = -(float)Math.Sin(angle);
+            m[1, 2] = (float)-Math.Sin(angle);
 
             m[2, 1] = (float)Math.Sin(angle);
             m[2, 2] = (float)Math.Cos(angle);
@@ -266,8 +266,21 @@ namespace DrawTest3.CustomMath
             m[0, 0] = (float)Math.Cos(angle);
             m[0, 2] = (float)Math.Sin(angle);
 
-            m[2, 0] = -(float)Math.Sin(angle);
+            m[2, 0] = (float)-Math.Sin(angle);
             m[2, 2] = (float)Math.Cos(angle);
+
+            return m;
+        }
+
+        public static Matrix RotateZ(float angle)
+        {
+            Matrix m = Identity;
+
+            m[0, 0] = (float)Math.Cos(angle);
+            m[0, 1] = (float)-Math.Sin(angle);
+
+            m[1, 0] = (float)Math.Sin(angle);
+            m[1, 1] = (float)Math.Cos(angle);
 
             return m;
         }

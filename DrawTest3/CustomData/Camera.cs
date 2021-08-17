@@ -54,21 +54,23 @@ namespace DrawTest3.CustomData
 
         public void Move(Camera_Movement_Type direction)
         {
+            float speed = 0.2f;
+
             if (direction == Camera_Movement_Type.Forward)
             {
-                position = position + forward;
+                position = position + forward * speed;
             }
             if (direction == Camera_Movement_Type.Backward)
             {
-                position = position - forward;
+                position = position - forward * speed;
             }
             if (direction == Camera_Movement_Type.Left)
             {
-                position = position - right;
+                position = position - right * speed;
             }
             if (direction == Camera_Movement_Type.Right)
             {
-                position = position + right;
+                position = position + right * speed;
             }
         }
 
@@ -76,9 +78,13 @@ namespace DrawTest3.CustomData
         //pitch x
         public void Rotate(Matrix rotateMatrix)
         {
-            right = rotateMatrix.GetAxis(0);
-            up = rotateMatrix.GetAxis(1);
-            forward = rotateMatrix.GetAxis(2);
+            right = rotateMatrix.GetAxis(0).Normalize();
+            up = rotateMatrix.GetAxis(1).Normalize();
+            forward = rotateMatrix.GetAxis(2).Normalize();
+
+            /*Console.WriteLine("右" + right.toDirection());
+            Console.WriteLine("上" + up.toDirection());
+            Console.WriteLine("前" + forward.toDirection());*/
         }
 
         float yaw;
@@ -89,14 +95,14 @@ namespace DrawTest3.CustomData
             this.yaw += yaw * 0.01f;
             this.pitch += pitch * 0.01f;
 
-            /*if (this.pitch > 89.0f)
+            if (this.pitch > 89.0f)
             {
                 this.pitch = 89.0f;
             }
             if (this.pitch < -89.0f)
             {
                 this.pitch = -89.0f;
-            }*/
+            }
 
             Matrix rotateMatrix = Matrix.RotateX(this.yaw) * Matrix.RotateY(this.pitch);
             Rotate(rotateMatrix);

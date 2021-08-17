@@ -19,6 +19,7 @@ namespace DrawTest3
         public Form1()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
 
             Graphics drawGraphic = CreateGraphics();
 
@@ -34,6 +35,12 @@ namespace DrawTest3
             MouseDown += OnMouseDown;
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
+
+            device.OnUpdate += 
+                (fps) => 
+                { 
+                    FPSLabel.Text = string.Format("FPS: {0}",fps.ToString());
+                };
         }
 
         private bool move = false;
@@ -45,6 +52,8 @@ namespace DrawTest3
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
+            lastX = e.X;
+            lastY = e.Y;
             move = true;
         }
 
@@ -73,7 +82,7 @@ namespace DrawTest3
             //Console.WriteLine(deltaX);
             //Console.WriteLine(deltaY);
 
-            device.RotateCamera(deltaY * -0.1f, deltaX * -0.1f);
+            device.RotateCamera(deltaY * 0.1f, deltaX * 0.1f);
 
             lastX = X;
             lastY = Y;
@@ -112,6 +121,8 @@ namespace DrawTest3
         private void ResetBtn_Click(object sender, EventArgs e)
         {
             device.ResetCamera();
+
+            UpdateCameraPosLabel();
         }
 
         private void PointModeBtn_Click(object sender, EventArgs e)
@@ -143,9 +154,18 @@ namespace DrawTest3
             LightBtn.Text = value ? "Lighting Off" :"Lighting On";
         }
 
+        private void CuttingBtn_Click(object sender, EventArgs e)
+        {
+            bool value;
+
+            device.TurnCutting(out value);
+
+            CuttingBtn.Text = value ? "Cutting Off" : "Cutting On";
+        }
+
         private void OnAmbientStrengthInputValueChnaged(object sender, EventArgs e)
         {
-            float result = 0;
+            /*float result = 0;
             if (float.TryParse(AmbientStrengthInput.Text, out result))
             {
                 float ambient = result;
@@ -153,7 +173,7 @@ namespace DrawTest3
                 device.SetAmbientStrength(ambient);
 
                 AmbientStrengthInput.Text = ambient.ToString();
-            }
+            }*/
         }
 
         private void AmbientStrength_Click(object sender, EventArgs e)
@@ -180,6 +200,8 @@ namespace DrawTest3
                 device.MoveCamera(Camera_Movement_Type.Right);
             }
 
+            UpdateCameraPosLabel();
+
             if (keyData == Keys.J)
             {
                 device.RotateCamera(0, 0.8f);
@@ -198,6 +220,11 @@ namespace DrawTest3
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void UpdateCameraPosLabel()
+        {
+            CameraPosLabel.Text = device.Camera.position.toString();
         }
     }
 }

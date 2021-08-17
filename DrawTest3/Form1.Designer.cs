@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace DrawTest3
 {
     partial class Form1
@@ -43,6 +45,9 @@ namespace DrawTest3
             this.LightBtn = new System.Windows.Forms.Button();
             this.AmbientStrengthInput = new System.Windows.Forms.TextBox();
             this.AmbientStrengthTxt = new System.Windows.Forms.Label();
+            this.CameraPosLabel = new System.Windows.Forms.Label();
+            this.CuttingBtn = new System.Windows.Forms.Button();
+            this.FPSLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // LeftBtn
@@ -117,7 +122,7 @@ namespace DrawTest3
             // 
             // PointModeBtn
             // 
-            this.PointModeBtn.Location = new System.Drawing.Point(676, 124);
+            this.PointModeBtn.Location = new System.Drawing.Point(676, 198);
             this.PointModeBtn.Name = "PointModeBtn";
             this.PointModeBtn.Size = new System.Drawing.Size(94, 23);
             this.PointModeBtn.TabIndex = 7;
@@ -127,7 +132,7 @@ namespace DrawTest3
             // 
             // LineModeBtn
             // 
-            this.LineModeBtn.Location = new System.Drawing.Point(676, 153);
+            this.LineModeBtn.Location = new System.Drawing.Point(676, 227);
             this.LineModeBtn.Name = "LineModeBtn";
             this.LineModeBtn.Size = new System.Drawing.Size(94, 23);
             this.LineModeBtn.TabIndex = 8;
@@ -137,7 +142,7 @@ namespace DrawTest3
             // 
             // SurfaceModeBtn
             // 
-            this.SurfaceModeBtn.Location = new System.Drawing.Point(676, 182);
+            this.SurfaceModeBtn.Location = new System.Drawing.Point(676, 256);
             this.SurfaceModeBtn.Name = "SurfaceModeBtn";
             this.SurfaceModeBtn.Size = new System.Drawing.Size(94, 23);
             this.SurfaceModeBtn.TabIndex = 9;
@@ -147,7 +152,7 @@ namespace DrawTest3
             // 
             // TextureModeBtn
             // 
-            this.TextureModeBtn.Location = new System.Drawing.Point(676, 211);
+            this.TextureModeBtn.Location = new System.Drawing.Point(676, 285);
             this.TextureModeBtn.Name = "TextureModeBtn";
             this.TextureModeBtn.Size = new System.Drawing.Size(94, 23);
             this.TextureModeBtn.TabIndex = 10;
@@ -157,7 +162,7 @@ namespace DrawTest3
             // 
             // LightBtn
             // 
-            this.LightBtn.Location = new System.Drawing.Point(676, 263);
+            this.LightBtn.Location = new System.Drawing.Point(676, 337);
             this.LightBtn.Name = "LightBtn";
             this.LightBtn.Size = new System.Drawing.Size(94, 23);
             this.LightBtn.TabIndex = 11;
@@ -165,29 +170,60 @@ namespace DrawTest3
             this.LightBtn.UseVisualStyleBackColor = true;
             this.LightBtn.Click += new System.EventHandler(this.LightBtn_Click);
             // 
-            // ambientStrengthInput
+            // AmbientStrengthInput
             // 
-            this.AmbientStrengthInput.Location = new System.Drawing.Point(726, 292);
-            this.AmbientStrengthInput.Name = "ambientStrengthInput";
+            this.AmbientStrengthInput.Location = new System.Drawing.Point(726, 366);
+            this.AmbientStrengthInput.Name = "AmbientStrengthInput";
             this.AmbientStrengthInput.Size = new System.Drawing.Size(44, 21);
             this.AmbientStrengthInput.TabIndex = 12;
             this.AmbientStrengthInput.Text = "0.5";
             this.AmbientStrengthInput.TextChanged += new System.EventHandler(this.OnAmbientStrengthInputValueChnaged);
             // 
-            // AmbientStrength
+            // AmbientStrengthTxt
             // 
             this.AmbientStrengthTxt.AutoSize = true;
-            this.AmbientStrengthTxt.Location = new System.Drawing.Point(625, 297);
-            this.AmbientStrengthTxt.Name = "AmbientStrength";
+            this.AmbientStrengthTxt.Location = new System.Drawing.Point(625, 371);
+            this.AmbientStrengthTxt.Name = "AmbientStrengthTxt";
             this.AmbientStrengthTxt.Size = new System.Drawing.Size(95, 12);
             this.AmbientStrengthTxt.TabIndex = 13;
             this.AmbientStrengthTxt.Text = "ambientStrength";
+            // 
+            // CameraPosLabel
+            // 
+            this.CameraPosLabel.AutoSize = true;
+            this.CameraPosLabel.Location = new System.Drawing.Point(388, 12);
+            this.CameraPosLabel.Name = "CameraPosLabel";
+            this.CameraPosLabel.Size = new System.Drawing.Size(65, 12);
+            this.CameraPosLabel.TabIndex = 14;
+            this.CameraPosLabel.Text = "camera Pos";
+            // 
+            // CuttingBtn
+            // 
+            this.CuttingBtn.Location = new System.Drawing.Point(676, 142);
+            this.CuttingBtn.Name = "CuttingBtn";
+            this.CuttingBtn.Size = new System.Drawing.Size(94, 23);
+            this.CuttingBtn.TabIndex = 15;
+            this.CuttingBtn.Text = "Cutting On";
+            this.CuttingBtn.UseVisualStyleBackColor = true;
+            this.CuttingBtn.Click += new System.EventHandler(this.CuttingBtn_Click);
+            // 
+            // FPSLabel
+            // 
+            this.FPSLabel.AutoSize = true;
+            this.FPSLabel.Location = new System.Drawing.Point(13, 12);
+            this.FPSLabel.Name = "FPSLabel";
+            this.FPSLabel.Size = new System.Drawing.Size(29, 12);
+            this.FPSLabel.TabIndex = 16;
+            this.FPSLabel.Text = "FPS:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.FPSLabel);
+            this.Controls.Add(this.CuttingBtn);
+            this.Controls.Add(this.CameraPosLabel);
             this.Controls.Add(this.AmbientStrengthTxt);
             this.Controls.Add(this.AmbientStrengthInput);
             this.Controls.Add(this.LightBtn);
@@ -202,6 +238,7 @@ namespace DrawTest3
             this.Controls.Add(this.DownBtn);
             this.Controls.Add(this.RightBtn);
             this.Controls.Add(this.LeftBtn);
+            this.DoubleBuffered = true;
             this.MaximumSize = new System.Drawing.Size(800, 600);
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Form1";
@@ -209,7 +246,6 @@ namespace DrawTest3
             this.ResumeLayout(false);
             this.PerformLayout();
 
-            this.DoubleBuffered = true;
         }
 
         #endregion
@@ -228,6 +264,9 @@ namespace DrawTest3
         private System.Windows.Forms.Button LightBtn;
         private System.Windows.Forms.TextBox AmbientStrengthInput;
         private System.Windows.Forms.Label AmbientStrengthTxt;
+        private Label CameraPosLabel;
+        private Button CuttingBtn;
+        private Label FPSLabel;
     }
 }
 
