@@ -19,6 +19,7 @@ namespace DrawTest3
         public Form1()
         {
             InitializeComponent();
+
             CheckForIllegalCrossThreadCalls = false;
 
             Graphics drawGraphic = CreateGraphics();

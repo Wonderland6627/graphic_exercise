@@ -205,7 +205,7 @@ namespace DrawTest3.CustomMath
         {
             var zaxis = (cameraTarget - cameraPosition).Normalize();
             var xaxis = Vector3.Cross(cameraUpVector, zaxis).Normalize();
-            var yaxis = Vector3.Cross(zaxis, xaxis);
+            var yaxis = Vector3.Cross(zaxis, xaxis).Normalize();
 
             var matrix = Identity;
 

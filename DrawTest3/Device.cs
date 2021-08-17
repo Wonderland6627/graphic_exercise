@@ -104,7 +104,7 @@ namespace DrawTest3
 
         private void InitSystem()
         {
-            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/UV.jpg");
+            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/wall.jpg");
             texture = new Bitmap(image, 256, 256);
 
             frameBuffer = new Bitmap(windowSize.Width, windowSize.Height);
@@ -502,13 +502,13 @@ namespace DrawTest3
                             float u = Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1);
                             float v = Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1);
 
-                            int uIndex = (int)Math.Round(u, MidpointRounding.AwayFromZero);
+                            /*int uIndex = (int)Math.Round(u, MidpointRounding.AwayFromZero);
                             int vIndex = (int)Math.Round(v, MidpointRounding.AwayFromZero);
 
                             uIndex = Mathf.Clamp(uIndex, 0, texture.Width - 1);
-                            vIndex = Mathf.Clamp(vIndex, 0, texture.Height - 1);
+                            vIndex = Mathf.Clamp(vIndex, 0, texture.Height - 1);*/
 
-                            DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel(uIndex, vIndex));//纹理点采样
+                            DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel((int)u, (int)v));//纹理点采样
                             DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
                             DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
 
@@ -920,6 +920,7 @@ namespace DrawTest3
         {
             camera.position = new Vector3(0, 0, -10);
             camera.Rotate(Matrix.RotateX(0) * Matrix.RotateY(0));
+            camera.fov = (float)System.Math.PI / 3f;
         }
 
         public void UpdateCameraFOV(float offset)
