@@ -90,7 +90,12 @@ namespace DrawTest3.CustomData
         float yaw;
         float pitch;
 
-        public void UpdateCameraVectors(float yaw, float pitch)
+        /// <summary>
+        /// x pitch
+        /// y yaw
+        /// z roll
+        /// </summary>
+        public void UpdateCameraVectors(float pitch, float yaw)
         {
             this.yaw += yaw * 0.01f;
             this.pitch += pitch * 0.01f;
@@ -104,7 +109,7 @@ namespace DrawTest3.CustomData
                 this.pitch = -89.0f;
             }
 
-            Matrix rotateMatrix = Matrix.RotateX(this.yaw) * Matrix.RotateY(this.pitch);
+            Matrix rotateMatrix = Matrix.RotateX(this.pitch) * Matrix.RotateY(this.yaw);
             Rotate(rotateMatrix);
         }
 

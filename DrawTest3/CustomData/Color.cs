@@ -70,6 +70,14 @@ namespace DrawTest3.CustomData
             }
         }
 
+        public static Color Default
+        {
+            get
+            {
+                return new Color(1, 1, 1);
+            }
+        }
+
         public System.Drawing.Color ToColor()
         {
             float r = this.R * 255f;

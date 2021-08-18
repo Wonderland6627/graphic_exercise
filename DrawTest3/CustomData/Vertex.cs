@@ -19,6 +19,7 @@ namespace DrawTest3.CustomData
 
         public Color lightingColor;
 
+        public float depth;
         public float onePerZ; //1/z
 
         public Vertex(Vector3 position, Vector3 normal, float u, float v, float r, float g, float b)
@@ -26,22 +27,23 @@ namespace DrawTest3.CustomData
             this.position = position;
             this.position.w = 1;
 
-            color = new Color();
-            color.R = r;
-            color.G = g;
-            color.B = b;
+            this.color = new Color();
+            this.color.R = r;
+            this.color.G = g;
+            this.color.B = b;
 
             this.normal = normal;
 
             this.u = u;
             this.v = v;
 
-            lightingColor = new Color();
-            lightingColor.R = 1;
-            lightingColor.G = 1;
-            lightingColor.B = 1;
+            this.lightingColor = new Color();
+            this.lightingColor.R = 1;
+            this.lightingColor.G = 1;
+            this.lightingColor.B = 1;
 
-            onePerZ = 1;
+            this.depth = 1;
+            this.onePerZ = 1;
         }
 
         public static Vertex Lerp(Vertex v1, Vertex v2, float t)
@@ -51,8 +53,9 @@ namespace DrawTest3.CustomData
             v.color = Color.Lerp(v1.color, v2.color, t);
             v.lightingColor = Color.Lerp(v1.lightingColor, v2.lightingColor, t);
 
-            v.u = UnityEngine.Mathf.Lerp(v1.u, v2.v, t);
+            v.u = UnityEngine.Mathf.Lerp(v1.u, v2.u, t);
             v.v = UnityEngine.Mathf.Lerp(v1.v, v2.v, t);
+            v.depth = UnityEngine.Mathf.Lerp(v1.depth, v2.depth, t);
             v.onePerZ = UnityEngine.Mathf.Lerp(v1.onePerZ, v2.onePerZ, t);
 
             return v;
@@ -63,8 +66,9 @@ namespace DrawTest3.CustomData
             v.color = Color.Lerp(v1.color, v2.color, t);
             v.lightingColor = Color.Lerp(v1.lightingColor, v2.lightingColor, t);
 
-            v.u = UnityEngine.Mathf.Lerp(v1.u, v2.v, t);
+            v.u = UnityEngine.Mathf.Lerp(v1.u, v2.u, t);
             v.v = UnityEngine.Mathf.Lerp(v1.v, v2.v, t);
+            v.depth = UnityEngine.Mathf.Lerp(v1.depth, v2.depth, t);
             v.onePerZ = UnityEngine.Mathf.Lerp(v1.onePerZ, v2.onePerZ, t);
 
             return v;
@@ -88,6 +92,7 @@ namespace DrawTest3.CustomData
             target.lightingColor.G = source.lightingColor.G;
             target.lightingColor.B = source.lightingColor.B;
 
+            target.depth = source.depth;
             target.onePerZ = source.onePerZ;
         }
     }

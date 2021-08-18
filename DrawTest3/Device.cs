@@ -104,7 +104,7 @@ namespace DrawTest3
 
         private void InitSystem()
         {
-            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/wall.jpg");
+            System.Drawing.Image image = System.Drawing.Image.FromFile("../../Textures/texture.jpg");
             texture = new Bitmap(image, 256, 256);
 
             frameBuffer = new Bitmap(windowSize.Width, windowSize.Height);
@@ -116,8 +116,8 @@ namespace DrawTest3
             cubeMesh = Mesh.Cube;
             planeMesh = Mesh.Plane;
 
-            camera = new Camera(new Vector3(0, 0, -10, 1), new Vector3(0, 0, 1, 1), new Vector3(0, 1, 0, 0)
-                             , (float)System.Math.PI / 3f, this.windowSize.Width / (float)this.windowSize.Height, 3f, 30f);
+            camera = new Camera(new Vector3(0, 0, -5, 1), new Vector3(0, 0, 1, 1), new Vector3(0, 1, 0, 0)
+                             , (float)System.Math.PI / 3f, this.windowSize.Width / (float)this.windowSize.Height, 5f, 30f);
 
             surfacesList = new List<Surface>();
             surfacesQueue = new Queue<Surface>();
@@ -157,7 +157,7 @@ namespace DrawTest3
             ModelViewProjectionTransform(model, view, projection, ref v1);
             ModelViewProjectionTransform(model, view, projection, ref v2);
             ModelViewProjectionTransform(model, view, projection, ref v3);
-
+            
             if (!Exclude(v1) && !Exclude(v2) && !Exclude(v3))
             {
                 return;
@@ -166,6 +166,10 @@ namespace DrawTest3
             ScreenTransform(ref v1);
             ScreenTransform(ref v2);
             ScreenTransform(ref v3);
+
+            CVVScreen(ref v1);
+            CVVScreen(ref v2);
+            CVVScreen(ref v3);
 
             if (Clip(v1) && Clip(v2) && Clip(v3))
             {
@@ -293,8 +297,6 @@ namespace DrawTest3
                 vertex.position.z *= 1 / vertex.position.w;
 
                 vertex.position.w = 1;
-                vertex.position.x = (vertex.position.x + 1) * 0.5f * windowSize.Width;
-                vertex.position.y = (1 - vertex.position.y) * 0.5f * windowSize.Height;
 
                 vertex.u *= vertex.onePerZ;
                 vertex.v *= vertex.onePerZ;
@@ -302,6 +304,12 @@ namespace DrawTest3
                 vertex.color *= vertex.onePerZ;
                 vertex.lightingColor *= vertex.onePerZ;
             }
+        }
+
+        private void CVVScreen(ref Vertex vertex)
+        {
+            vertex.position.x = (vertex.position.x + 1) * 0.5f * windowSize.Width;
+            vertex.position.y = (1 - vertex.position.y) * 0.5f * windowSize.Height;
         }
 
         private bool BackCulling(Vertex v1, Vertex v2, Vertex v3)
@@ -438,11 +446,11 @@ namespace DrawTest3
 
                     if (point1.position.x < point2.position.x)
                     {
-                        Scanline(point1, point2, yIndex);
+                        Scanline(point1, point2, yIndex, xl, xr);
                     }
                     else
                     {
-                        Scanline(point2, point1, yIndex);
+                        Scanline(point2, point1, yIndex, xr, xl);
                     }
                 }
             }
@@ -471,23 +479,86 @@ namespace DrawTest3
 
                     if (point1.position.x < point2.position.x)
                     {
-                        Scanline(point1, point2, yIndex);
+                        Scanline(point1, point2, yIndex, xl, xr);
                     }
                     else
                     {
-                        Scanline(point2, point1, yIndex);
+                        Scanline(point2, point1, yIndex, xr, xl);
                     }
                 }
             }
         }
 
-        private void Scanline(Vertex v1, Vertex v2, int yIndex)
+        private void Scanline(Vertex v1, Vertex v2, int yIndex, float xl, float xr)
         {
+            //int x = (int)xl;
+            //int dx = (int)xr - (int)xl;
+            //int stepX = 1;
+
+            //float w = 0;
+            //float lerpT = 0;
+            //float depth = 0;
+
+            //int u = 0;
+            //int v = 0;
+
+            //int max = dx;
+            //if (max == 0)
+            //{
+            //    max = 9999;
+            //}
+
+            //for (int i = 0; i <= dx; i++)
+            //{
+            //    lerpT = i / (float)max;
+            //    int xIndex = x;
+            //    if (xIndex >= 0 && xIndex < windowSize.Width)
+            //    {
+            //        depth = Mathf.Lerp(v1.depth, v2.depth, lerpT);
+            //        if (zBuffer[xIndex, yIndex] > depth)
+            //        {
+            //            w = Mathf.Lerp(v1.onePerZ, v2.onePerZ, lerpT);
+            //            if (w != 0)
+            //            {
+            //                w = 1 / w;
+            //            }
+
+            //            zBuffer[xIndex, yIndex] = depth;
+            //            u = (int)(Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1));
+            //            v = (int)(Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1));
+
+            //            DrawTest3.CustomData.Color finalColor = CustomData.Color.Default;
+            //            DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
+            //            DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
+
+            //            switch (displayMode)
+            //            {
+            //                case DisplayMode.Surface when lightingOn:
+            //                    finalColor = vertexColor * lightColor;
+            //                    break;
+            //                case DisplayMode.Surface when !lightingOn:
+            //                    finalColor = vertexColor;
+            //                    break;
+
+            //                case DisplayMode.Texture when lightingOn:
+            //                    finalColor = GetTexturePixel(u, v).ToCustomColor() * lightColor;
+            //                    break;
+            //                case DisplayMode.Texture when !lightingOn:
+            //                    finalColor = GetTexturePixel(u, v).ToCustomColor();
+            //                    break;
+            //            }
+
+            //            frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
+            //        }
+            //    }
+            //    x += stepX;
+            //}
+
             float lineX = v2.position.x - v1.position.x;
 
             for (var x = v1.position.x; x <= v2.position.x; x++)
             {
-                int xIndex = (int)(x + 0.5f);
+                int xIndex = (int)x;
                 if (xIndex >= 0 && xIndex <= windowSize.Width)
                 {
                     float lerpT = (x - v1.position.x) / lineX;
@@ -501,13 +572,7 @@ namespace DrawTest3
 
                             float u = Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1);
                             float v = Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1);
-
-                            /*int uIndex = (int)Math.Round(u, MidpointRounding.AwayFromZero);
-                            int vIndex = (int)Math.Round(v, MidpointRounding.AwayFromZero);
-
-                            uIndex = Mathf.Clamp(uIndex, 0, texture.Width - 1);
-                            vIndex = Mathf.Clamp(vIndex, 0, texture.Height - 1);*/
-
+                            
                             DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel((int)u, (int)v));//纹理点采样
                             DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
                             DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
@@ -646,14 +711,14 @@ namespace DrawTest3
 
                 for (int i = surface.startIndex; i < 6; i++)
                 {
-                    if (isClip)
-                    {
-                        break;
-                    }
-                    else
+                    if (!isClip)
                     {
                         isClip = MultiSurfaceCutting(surface.Vertices[0], surface.Vertices[1], surface.Vertices[2],
                                                      dotVectors[i], distance[i], i);
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
 

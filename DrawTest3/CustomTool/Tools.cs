@@ -71,5 +71,10 @@ namespace DrawTest3.CustomTool
         {
             return angle * (Mathf.PI / 180f);
         }
+
+        public static DrawTest3.CustomData.Color ToCustomColor(this System.Drawing.Color color)
+        {
+            return new DrawTest3.CustomData.Color(color);
+        }
     }
 }
