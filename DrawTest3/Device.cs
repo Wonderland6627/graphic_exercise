@@ -135,7 +135,7 @@ namespace DrawTest3
             return false;
         }
 
-        private void DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Matrix model, Matrix view, Matrix projection)
+        private void DrawTriangle(Vertex v1, Vertex v2, Vertex v3, Matrix model, Matrix view, Matrix projection, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
             ModelViewProjectionTransform(model, ref v1);
             ModelViewProjectionTransform(model, ref v2);
@@ -152,7 +152,7 @@ namespace DrawTest3
             ModelViewProjectionTransform(model, view, ref v2);
             ModelViewProjectionTransform(model, view, ref v3);
 
-            //if (!BackCulling(v1, v2, v3)) return;
+            if (!BackCulling(v1, v2, v3)) return;
 
             ModelViewProjectionTransform(model, view, projection, ref v1);
             ModelViewProjectionTransform(model, view, projection, ref v2);
@@ -182,12 +182,12 @@ namespace DrawTest3
 
                 for (int i = 0; i < surfacesList.Count; i++)
                 {
-                    Draw(surfacesList[i]);
+                    Draw(surfacesList[i], lightingOn, cuttingOn, displayMode);
                 }
             }
             else
             {
-                Draw(v1, v2, v3);
+                Draw(v1, v2, v3, lightingOn, cuttingOn, displayMode);
             }
         }
 
@@ -212,12 +212,12 @@ namespace DrawTest3
             return false;
         }
 
-        private void Draw(Surface surface)
+        private void Draw(Surface surface, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
-            Draw(surface.Vertices[0], surface.Vertices[1], surface.Vertices[2]);
+            Draw(surface.Vertices[0], surface.Vertices[1], surface.Vertices[2], lightingOn, cuttingOn, displayMode);
         }
 
-        private void Draw(Vertex v1, Vertex v2, Vertex v3)
+        private void Draw(Vertex v1, Vertex v2, Vertex v3, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
             switch (displayMode)
             {
@@ -233,14 +233,14 @@ namespace DrawTest3
                     break;
                 case DisplayMode.Surface:
                 case DisplayMode.Texture:
-                    RasterizationTriangle(v1, v2, v3);
+                    RasterizationTriangle(v1, v2, v3, lightingOn, cuttingOn, displayMode);
                     break;
             }
         }
 
-        private void RasterizationTriangle(Surface surface)
+        private void RasterizationTriangle(Surface surface, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
-            RasterizationTriangle(surface.Vertices[0], surface.Vertices[1], surface.Vertices[2]);
+            RasterizationTriangle(surface.Vertices[0], surface.Vertices[1], surface.Vertices[2], lightingOn, cuttingOn, displayMode);
         }
 
         private void GouraudLight(Matrix model, Vector3 cameraPos, ref Vertex vertex)
@@ -328,39 +328,39 @@ namespace DrawTest3
             return false;
         }
 
-        private void RasterizationTriangle(Vertex v1, Vertex v2, Vertex v3)
+        private void RasterizationTriangle(Vertex v1, Vertex v2, Vertex v3, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
             if (v1.position.y == v2.position.y)
             {
                 if (v1.position.y < v3.position.y)
                 {
-                    FillTopTriangle(v1, v2, v3);
+                    FillTopTriangle(v1, v2, v3, lightingOn, cuttingOn, displayMode);
                 }
                 else
                 {
-                    FillBottomTriangle(v3, v1, v2);
+                    FillBottomTriangle(v3, v1, v2, lightingOn, cuttingOn, displayMode);
                 }
             }
             else if (v1.position.y == v3.position.y)
             {
                 if (v1.position.y < v2.position.y)
                 {
-                    FillTopTriangle(v1, v3, v2);
+                    FillTopTriangle(v1, v3, v2, lightingOn, cuttingOn, displayMode);
                 }
                 else
                 {
-                    FillBottomTriangle(v2, v1, v3);
+                    FillBottomTriangle(v2, v1, v3, lightingOn, cuttingOn, displayMode);
                 }
             }
             else if (v2.position.y == v3.position.y)
             {
                 if (v2.position.y < v1.position.y)
                 {
-                    FillTopTriangle(v2, v3, v1);
+                    FillTopTriangle(v2, v3, v1, lightingOn, cuttingOn, displayMode);
                 }
                 else
                 {
-                    FillBottomTriangle(v1, v2, v3);
+                    FillBottomTriangle(v1, v2, v3, lightingOn, cuttingOn, displayMode);
                 }
             }
             else
@@ -418,12 +418,12 @@ namespace DrawTest3
                 midVertex.position = new Vector3(middleX, middle.position.y, 0);
                 Tools.LerpProps(ref midVertex, top, bottom, t);
 
-                FillBottomTriangle(top, midVertex, middle);
-                FillTopTriangle(midVertex, middle, bottom);
+                FillBottomTriangle(top, midVertex, middle, lightingOn, cuttingOn, displayMode);
+                FillTopTriangle(midVertex, middle, bottom, lightingOn, cuttingOn, displayMode);
             }
         }
 
-        private void FillTopTriangle(Vertex v1, Vertex v2, Vertex v3)
+        private void FillTopTriangle(Vertex v1, Vertex v2, Vertex v3, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
             for (var y = v1.position.y; y < v3.position.y; y++)
             {
@@ -446,17 +446,17 @@ namespace DrawTest3
 
                     if (point1.position.x < point2.position.x)
                     {
-                        Scanline(point1, point2, yIndex, xl, xr);
+                        Scanline(point1, point2, yIndex, lightingOn, cuttingOn, displayMode);
                     }
                     else
                     {
-                        Scanline(point2, point1, yIndex, xr, xl);
+                        Scanline(point2, point1, yIndex, lightingOn, cuttingOn, displayMode);
                     }
                 }
             }
         }
 
-        private void FillBottomTriangle(Vertex v1, Vertex v2, Vertex v3)
+        private void FillBottomTriangle(Vertex v1, Vertex v2, Vertex v3, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
             for (var y = v1.position.y; y < v2.position.y; y++)
             {
@@ -479,17 +479,17 @@ namespace DrawTest3
 
                     if (point1.position.x < point2.position.x)
                     {
-                        Scanline(point1, point2, yIndex, xl, xr);
+                        Scanline(point1, point2, yIndex, lightingOn, cuttingOn, displayMode);
                     }
                     else
                     {
-                        Scanline(point2, point1, yIndex, xr, xl);
+                        Scanline(point2, point1, yIndex, lightingOn, cuttingOn, displayMode);
                     }
                 }
             }
         }
 
-        private void Scanline(Vertex v1, Vertex v2, int yIndex, float xl, float xr)
+        private void Scanline(Vertex v1, Vertex v2, int yIndex, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
             //int x = (int)xl;
             //int dx = (int)xr - (int)xl;
@@ -659,13 +659,13 @@ namespace DrawTest3
             }
         }
 
-        private void Draw()
+        private void Draw(bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
             model = Matrix.Translation(Vector3.zero);
             view = camera.GetViewMatrix();//Matrix.LookAtLH(camera.position, camera.position + camera.forward, camera.up);
             projection = Matrix.PerspectiveFovLH(camera.fov, camera.aspectRatio, camera.zNear, camera.zFar);
 
-            Draw(model, view, projection, cubeMesh);
+            Draw(model, view, projection, cubeMesh, lightingOn, cuttingOn, displayMode);
             //Draw(model, view, projection, planeMesh);
 
             if (drawGraphic == null)
@@ -676,11 +676,11 @@ namespace DrawTest3
             //drawGraphic.Clear(System.Drawing.Color.Gray);
         }
 
-        private void Draw(Matrix model, Matrix view, Matrix projection, Mesh mesh)
+        private void Draw(Matrix model, Matrix view, Matrix projection, Mesh mesh, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
             for (int i = 0; i + 2 < mesh.Vertices.Length; i += 3)
             {
-                DrawTriangle(mesh.Vertices[i], mesh.Vertices[i + 1], mesh.Vertices[i + 2], model, view, projection);
+                DrawTriangle(mesh.Vertices[i], mesh.Vertices[i + 1], mesh.Vertices[i + 2], model, view, projection, lightingOn, cuttingOn, displayMode);
             }
         }
 
@@ -905,7 +905,7 @@ namespace DrawTest3
             {
                 Clear();
 
-                Draw();
+                Draw(lightingOn, cutting, displayMode);
             }
         }
 
@@ -921,7 +921,9 @@ namespace DrawTest3
 
                     Clear();
 
-                    Draw();
+                    UpdateSettings();
+
+                    Draw(lightingOn, cutting, displayMode);
 
                     float fps = (int)Math.Ceiling(1000 / (DateTime.Now - lastTime).TotalMilliseconds);
                     if (OnUpdate != null)
@@ -930,6 +932,11 @@ namespace DrawTest3
                     }
                 }
             }
+        }
+
+        private void UpdateSettings()
+        {
+
         }
 
         private void Clear()
