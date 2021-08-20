@@ -84,8 +84,8 @@ namespace DrawTest3.CustomData
             Console.WriteLine("前" + forward.toDirection());*/
         }
 
-        float yaw;
-        float pitch;
+        public float yaw;
+        public float pitch;
 
         /// <summary>
         /// x pitch

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
-using Mathf = UnityEngine.Mathf;
+using Mathf = DrawTest3.CustomTool.MyMathf;
 
 namespace DrawTest3
 {
@@ -64,7 +64,7 @@ namespace DrawTest3
 
         public void Init(Size size, Graphics board)
         {
-            Test();
+            //Test();
 
             lockObj = new object();
 
@@ -169,18 +169,39 @@ namespace DrawTest3
                 return;
             }
 
-            if (cutting)
+            /*if (cutting)
             {
                 MultiSurfaceCutting(new Surface(v1, v2, v3));
 
-                for (int i = 0; i < surfacesList.Count; i++)
+                if (surfacesList.Count <= 1)
                 {
-                    Draw(surfacesList[i], lightingOn, cuttingOn, displayMode);
+                    Draw(v1, v2, v3, lightingOn, cuttingOn, displayMode);
                 }
+                else
+                {
+                    for (int i = 0; i < surfacesList.Count; i++)
+                    {
+                        Draw(surfacesList[i], lightingOn, cuttingOn, displayMode);
+                    }
+                }
+
+                return;
+            }
+
+            Draw(v1, v2, v3, lightingOn, cuttingOn, displayMode);*/
+
+            if (cutting)
+            {
+                MultiSurfaceCutting(new Surface(v1, v2, v3));
             }
             else
             {
-                Draw(v1, v2, v3, lightingOn, cuttingOn, displayMode);
+                surfacesList.Add(new Surface(v1, v2, v3));
+            }
+
+            for (int i = 0; i < surfacesList.Count; i++)
+            {
+                Draw(surfacesList[i], lightingOn, cuttingOn, displayMode);
             }
         }
 
@@ -484,77 +505,14 @@ namespace DrawTest3
 
         private void Scanline(Vertex v1, Vertex v2, int yIndex, bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
-            //int x = (int)xl;
-            //int dx = (int)xr - (int)xl;
-            //int stepX = 1;
-
-            //float w = 0;
-            //float lerpT = 0;
-            //float depth = 0;
-
-            //int u = 0;
-            //int v = 0;
-
-            //int max = dx;
-            //if (max == 0)
-            //{
-            //    max = 9999;
-            //}
-
-            //for (int i = 0; i <= dx; i++)
-            //{
-            //    lerpT = i / (float)max;
-            //    int xIndex = x;
-            //    if (xIndex >= 0 && xIndex < windowSize.Width)
-            //    {
-            //        depth = Mathf.Lerp(v1.depth, v2.depth, lerpT);
-            //        if (zBuffer[xIndex, yIndex] > depth)
-            //        {
-            //            w = Mathf.Lerp(v1.onePerZ, v2.onePerZ, lerpT);
-            //            if (w != 0)
-            //            {
-            //                w = 1 / w;
-            //            }
-
-            //            zBuffer[xIndex, yIndex] = depth;
-            //            u = (int)(Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1));
-            //            v = (int)(Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1));
-
-            //            DrawTest3.CustomData.Color finalColor = CustomData.Color.Default;
-            //            DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
-            //            DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
-
-            //            switch (displayMode)
-            //            {
-            //                case DisplayMode.Surface when lightingOn:
-            //                    finalColor = vertexColor * lightColor;
-            //                    break;
-            //                case DisplayMode.Surface when !lightingOn:
-            //                    finalColor = vertexColor;
-            //                    break;
-
-            //                case DisplayMode.Texture when lightingOn:
-            //                    finalColor = GetTexturePixel(u, v).ToCustomColor() * lightColor;
-            //                    break;
-            //                case DisplayMode.Texture when !lightingOn:
-            //                    finalColor = GetTexturePixel(u, v).ToCustomColor();
-            //                    break;
-            //            }
-
-            //            frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
-            //        }
-            //    }
-            //    x += stepX;
-            //}
-
-            float lineX = v2.position.x - v1.position.x;
+            float lineLength = v2.position.x - v1.position.x;
 
             for (var x = v1.position.x; x <= v2.position.x; x++)
             {
                 int xIndex = (int)(x + 0.5f);
                 if (xIndex >= 0 && xIndex < windowSize.Width)
                 {
-                    float lerpT = (x - v1.position.x) / lineX;
+                    float lerpT = (x - v1.position.x) / lineLength;
                     float onePerZ = UnityEngine.Mathf.Lerp(v1.onePerZ, v2.onePerZ, lerpT);
                     if (yIndex < zBuffer.GetLength(0) && xIndex < zBuffer.GetLength(1))
                     {
@@ -730,6 +688,14 @@ namespace DrawTest3
             float projectV1 = Vector3.Dot(dotVector, v1.position);
             float projectV2 = Vector3.Dot(dotVector, v2.position);
             float projectV3 = Vector3.Dot(dotVector, v3.position);
+
+            // v1,v2,v3都在立方体内
+            if (projectV1 > distance && projectV2 > distance && projectV3 > distance)
+            {
+                //不做任何处理
+                return false;
+            }
+
             //点与点之间的距离
             float dv1v2 = Math.Abs(projectV1 - projectV2);
             float dv1v3 = Math.Abs(projectV1 - projectV3);
@@ -739,13 +705,7 @@ namespace DrawTest3
             float pv2 = Math.Abs(projectV2 - distance);
             float pv3 = Math.Abs(projectV3 - distance);
 
-            //v1,v2,v3都在立方体内
-            if (projectV1 > distance && projectV2 > distance && projectV3 > distance)
-            {
-                //不做任何处理
-                return false;
-            }
-            else if (projectV1 < distance && projectV2 > distance && projectV3 > distance)//只有v1在外
+            if (projectV1 < distance && projectV2 > distance && projectV3 > distance)//只有v1在外
             {
                 Vertex temp2 = new Vertex();
                 lerpT = pv2 / dv1v2;
@@ -886,6 +846,7 @@ namespace DrawTest3
 
                 return true;
             }
+
             return false;
         }
 
@@ -944,20 +905,14 @@ namespace DrawTest3
 
         public void TurnLighting(out bool value)
         {
-            lock (frameBuffer)
-            {
-                lightingOn = !lightingOn;
-                value = lightingOn;
-            }
+            lightingOn = !lightingOn;
+            value = lightingOn;
         }
 
         public void TurnCutting(out bool value)
         {
-            lock (frameBuffer)
-            {
-                cutting = !cutting;
-                value = cutting;
-            }
+            cutting = !cutting;
+            value = cutting;
         }
 
         /// <summary>
@@ -980,9 +935,11 @@ namespace DrawTest3
 
         public void ResetCamera()
         {
-            camera.position = new Vector3(0, 0, -10);
+            camera.position = new Vector3(0, 0, -8);
             camera.Rotate(Matrix.RotateX(0) * Matrix.RotateY(0));
-            camera.fov = (float)System.Math.PI / 3f;
+            camera.fov = (float)System.Math.PI / 4f;
+            camera.yaw = 0;
+            camera.pitch = 0;
         }
 
         public void UpdateCameraFOV(float offset)

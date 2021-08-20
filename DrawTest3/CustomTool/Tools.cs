@@ -20,6 +20,49 @@ namespace DrawTest3.CustomTool
         }
     }
 
+    public class MyMathf
+    {
+        public static int Clamp(int value, int min, int max)
+        {
+            if (value > max)
+            {
+                return max;
+            }
+            else if (value < min)
+            {
+                return min;
+            }
+
+            return value;
+        }
+
+        public static float Clamp(float value, float min, float max)
+        {
+            if (value > max)
+            {
+                return max;
+            }
+            else if (value < min)
+            {
+                return min;
+            }
+
+            return value;
+        }
+
+        public static float Clamp01(float value)
+        {
+            return Clamp(value, 0, 1);
+        }
+
+        public static float Lerp(float a, float b, float lerp)
+        {
+            lerp = Clamp01(lerp);
+
+            return a + (b - a) * lerp;
+        }
+    }
+
     public class MeshCreator
     {
         public class MeshInfo
