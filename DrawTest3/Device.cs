@@ -507,7 +507,7 @@ namespace DrawTest3
         {
             float lineLength = v2.position.x - v1.position.x;
 
-            for (var x = v1.position.x; x <= v2.position.x; x++)
+            for (var x = v1.position.x; (int)(x + 0.5f) <= v2.position.x; x++)
             {
                 int xIndex = (int)(x + 0.5f);
                 if (xIndex >= 0 && xIndex < windowSize.Width)
@@ -521,10 +521,10 @@ namespace DrawTest3
                             float w = 1 / onePerZ;
                             zBuffer[yIndex, xIndex] = onePerZ;
 
-                            float u = Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1);
-                            float v = Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1);
+                            float u = Mathf.Lerp(v1.u, v2.u, lerpT) * w;
+                            float v = Mathf.Lerp(v1.v, v2.v, lerpT) * w;
 
-                            DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel((int)u, (int)v));//纹理点采样
+                            DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel(u, v));//纹理点采样
                             DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
                             DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
                             DrawTest3.CustomData.Color finalColor = new CustomData.Color(1, 1, 1);
@@ -565,6 +565,14 @@ namespace DrawTest3
             int v = Mathf.Clamp(y, 0, texture.Height - 1);
 
             return texture.GetPixel(u, v);
+        }
+
+        private System.Drawing.Color GetTexturePixel(float x, float y)
+        {
+            float u = x * (texture.Width - 1);
+            float v = y * (texture.Height - 1);
+
+            return texture.GetPixel((int)u, (int)v);
         }
 
         private void DrawLineDDA(Vertex vertex1, Vertex vertex2)
