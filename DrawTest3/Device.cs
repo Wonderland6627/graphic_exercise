@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using DrawTest3.CustomData;
 using DrawTest3.CustomMath;
-using DrawTest3.CustomData;
-using System.Timers;
-using System.Threading;
-
-using Mathf = UnityEngine.Mathf;
 using DrawTest3.CustomTool;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Threading;
+using Mathf = UnityEngine.Mathf;
 
 namespace DrawTest3
 {
@@ -116,8 +109,8 @@ namespace DrawTest3
             cubeMesh = Mesh.Cube;
             planeMesh = Mesh.Plane;
 
-            camera = new Camera(new Vector3(0, 0, -5, 1), new Vector3(0, 0, 1, 1), new Vector3(0, 1, 0, 0)
-                             , (float)System.Math.PI / 3f, this.windowSize.Width / (float)this.windowSize.Height, 5f, 30f);
+            camera = new Camera(new Vector3(0, 0, -8, 1), new Vector3(0, 0, 1, 1), new Vector3(0, 1, 0, 0)
+                             , (float)System.Math.PI / 4f, this.windowSize.Width / (float)this.windowSize.Height, 6f, 30f);
 
             surfacesList = new List<Surface>();
             surfacesQueue = new Queue<Surface>();
@@ -157,7 +150,7 @@ namespace DrawTest3
             ModelViewProjectionTransform(model, view, projection, ref v1);
             ModelViewProjectionTransform(model, view, projection, ref v2);
             ModelViewProjectionTransform(model, view, projection, ref v3);
-            
+
             if (!Exclude(v1) && !Exclude(v2) && !Exclude(v3))
             {
                 return;
@@ -558,8 +551,8 @@ namespace DrawTest3
 
             for (var x = v1.position.x; x <= v2.position.x; x++)
             {
-                int xIndex = (int)x;
-                if (xIndex >= 0 && xIndex <= windowSize.Width)
+                int xIndex = (int)(x + 0.5f);
+                if (xIndex >= 0 && xIndex < windowSize.Width)
                 {
                     float lerpT = (x - v1.position.x) / lineX;
                     float onePerZ = UnityEngine.Mathf.Lerp(v1.onePerZ, v2.onePerZ, lerpT);
@@ -572,38 +565,36 @@ namespace DrawTest3
 
                             float u = Mathf.Lerp(v1.u, v2.u, lerpT) * w * (texture.Width - 1);
                             float v = Mathf.Lerp(v1.v, v2.v, lerpT) * w * (texture.Height - 1);
-                            
+
                             DrawTest3.CustomData.Color texColor = new CustomData.Color(GetTexturePixel((int)u, (int)v));//纹理点采样
                             DrawTest3.CustomData.Color vertexColor = DrawTest3.CustomData.Color.Lerp(v1.color, v2.color, lerpT) * w;
                             DrawTest3.CustomData.Color lightColor = DrawTest3.CustomData.Color.Lerp(v1.lightingColor, v2.lightingColor, lerpT) * w;
+                            DrawTest3.CustomData.Color finalColor = new CustomData.Color(1, 1, 1);
 
                             if (lightingOn)
                             {
-                                DrawTest3.CustomData.Color finalColor;
-                                switch (displayMode)
+                                if (displayMode == DisplayMode.Surface)
                                 {
-                                    case DisplayMode.Surface:
-                                        finalColor = vertexColor * lightColor;
-                                        frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
-                                        break;
-                                    case DisplayMode.Texture:
-                                        finalColor = texColor * lightColor;
-                                        frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
-                                        break;
+                                    finalColor = vertexColor * lightColor;
+                                }
+                                else if (displayMode == DisplayMode.Texture)
+                                {
+                                    finalColor = texColor * lightColor;
                                 }
                             }
                             else
                             {
-                                switch (displayMode)
+                                if (displayMode == DisplayMode.Surface)
                                 {
-                                    case DisplayMode.Surface:
-                                        frameBuffer.SetPixel(xIndex, yIndex, vertexColor.ToColor());
-                                        break;
-                                    case DisplayMode.Texture:
-                                        frameBuffer.SetPixel(xIndex, yIndex, texColor.ToColor());
-                                        break;
+                                    finalColor = vertexColor * lightColor;
+                                }
+                                else if (displayMode == DisplayMode.Texture)
+                                {
+                                    finalColor = texColor * lightColor;
                                 }
                             }
+
+                            frameBuffer.SetPixel(xIndex, yIndex, finalColor.ToColor());
                         }
                     }
                 }
@@ -661,7 +652,7 @@ namespace DrawTest3
 
         private void Draw(bool lightingOn = false, bool cuttingOn = false, DisplayMode displayMode = DisplayMode.Surface)
         {
-            model = Matrix.Translation(Vector3.zero);
+            model = Matrix.Translation(new Vector3(0, 0, 2));
             view = camera.GetViewMatrix();//Matrix.LookAtLH(camera.position, camera.position + camera.forward, camera.up);
             projection = Matrix.PerspectiveFovLH(camera.fov, camera.aspectRatio, camera.zNear, camera.zFar);
 
@@ -697,7 +688,7 @@ namespace DrawTest3
                 new Vector3(0,-1,0)//下
         };
 
-        float[] distance = new float[] { -1, -1, 0f, -799, 0f, -599 };//各个平面到原点“距离”
+        float[] distance = new float[] { -1, -1, 0f, -783, 0f, -560 };//各个平面到原点“距离”
 
         private void MultiSurfaceCutting(Surface targetSurface)
         {
@@ -734,7 +725,7 @@ namespace DrawTest3
         private bool MultiSurfaceCutting(Vertex v1, Vertex v2, Vertex v3, Vector3 dotVector, float distance, int startIndex)
         {
             //插值因子
-            float t = 0;
+            float lerpT = 0;
             //点在法线上的投影
             float projectV1 = Vector3.Dot(dotVector, v1.position);
             float projectV2 = Vector3.Dot(dotVector, v2.position);
@@ -757,18 +748,18 @@ namespace DrawTest3
             else if (projectV1 < distance && projectV2 > distance && projectV3 > distance)//只有v1在外
             {
                 Vertex temp2 = new Vertex();
-                t = pv2 / dv1v2;
-                temp2.position.x = Mathf.Lerp(v2.position.x, v1.position.x, t);
-                temp2.position.y = Mathf.Lerp(v2.position.y, v1.position.y, t);
-                temp2.position.z = Mathf.Lerp(v2.position.z, v1.position.z, t);
-                Vertex.Lerp(ref temp2, v2, v1, t);
+                lerpT = pv2 / dv1v2;
+                temp2.position.x = Mathf.Lerp(v2.position.x, v1.position.x, lerpT);
+                temp2.position.y = Mathf.Lerp(v2.position.y, v1.position.y, lerpT);
+                temp2.position.z = Mathf.Lerp(v2.position.z, v1.position.z, lerpT);
+                Vertex.Lerp(ref temp2, v2, v1, lerpT);
 
                 Vertex temp1 = new Vertex();
-                t = pv3 / dv1v3;
-                temp1.position.x = Mathf.Lerp(v3.position.x, v1.position.x, t);
-                temp1.position.y = Mathf.Lerp(v3.position.y, v1.position.y, t);
-                temp1.position.z = Mathf.Lerp(v3.position.z, v1.position.z, t);
-                Vertex.Lerp(ref temp1, v3, v1, t);
+                lerpT = pv3 / dv1v3;
+                temp1.position.x = Mathf.Lerp(v3.position.x, v1.position.x, lerpT);
+                temp1.position.y = Mathf.Lerp(v3.position.y, v1.position.y, lerpT);
+                temp1.position.z = Mathf.Lerp(v3.position.z, v1.position.z, lerpT);
+                Vertex.Lerp(ref temp1, v3, v1, lerpT);
 
                 //画线或光栅化
                 Vertex temp3 = new Vertex();
@@ -783,18 +774,18 @@ namespace DrawTest3
             else if (projectV1 > distance && projectV2 < distance && projectV3 > distance)//只有v2在外
             {
                 Vertex temp1 = new Vertex();
-                t = pv1 / dv1v2;
-                temp1.position.x = Mathf.Lerp(v1.position.x, v2.position.x, t);
-                temp1.position.y = Mathf.Lerp(v1.position.y, v2.position.y, t);
-                temp1.position.z = Mathf.Lerp(v1.position.z, v2.position.z, t);
-                Vertex.Lerp(ref temp1, v1, v2, t);
+                lerpT = pv1 / dv1v2;
+                temp1.position.x = Mathf.Lerp(v1.position.x, v2.position.x, lerpT);
+                temp1.position.y = Mathf.Lerp(v1.position.y, v2.position.y, lerpT);
+                temp1.position.z = Mathf.Lerp(v1.position.z, v2.position.z, lerpT);
+                Vertex.Lerp(ref temp1, v1, v2, lerpT);
 
                 Vertex temp2 = new Vertex();
-                t = pv3 / dv2v3;
-                temp2.position.x = Mathf.Lerp(v3.position.x, v2.position.x, t);
-                temp2.position.y = Mathf.Lerp(v3.position.y, v2.position.y, t);
-                temp2.position.z = Mathf.Lerp(v3.position.z, v2.position.z, t);
-                Vertex.Lerp(ref temp2, v3, v2, t);
+                lerpT = pv3 / dv2v3;
+                temp2.position.x = Mathf.Lerp(v3.position.x, v2.position.x, lerpT);
+                temp2.position.y = Mathf.Lerp(v3.position.y, v2.position.y, lerpT);
+                temp2.position.z = Mathf.Lerp(v3.position.z, v2.position.z, lerpT);
+                Vertex.Lerp(ref temp2, v3, v2, lerpT);
 
                 //画线或光栅化
                 Vertex temp3 = new Vertex();
@@ -809,18 +800,18 @@ namespace DrawTest3
             else if (projectV1 > distance && projectV2 > distance && projectV3 < distance)//只有v3在外
             {
                 Vertex temp1 = new Vertex();
-                t = pv2 / dv2v3;
-                temp1.position.x = Mathf.Lerp(v2.position.x, v3.position.x, t);
-                temp1.position.y = Mathf.Lerp(v2.position.y, v3.position.y, t);
-                temp1.position.z = Mathf.Lerp(v2.position.z, v3.position.z, t);
-                Vertex.Lerp(ref temp1, v2, v3, t);
+                lerpT = pv2 / dv2v3;
+                temp1.position.x = Mathf.Lerp(v2.position.x, v3.position.x, lerpT);
+                temp1.position.y = Mathf.Lerp(v2.position.y, v3.position.y, lerpT);
+                temp1.position.z = Mathf.Lerp(v2.position.z, v3.position.z, lerpT);
+                Vertex.Lerp(ref temp1, v2, v3, lerpT);
 
                 Vertex temp2 = new Vertex();
-                t = pv1 / dv1v3;
-                temp2.position.x = Mathf.Lerp(v1.position.x, v3.position.x, t);
-                temp2.position.y = Mathf.Lerp(v1.position.y, v3.position.y, t);
-                temp2.position.z = Mathf.Lerp(v1.position.z, v3.position.z, t);
-                Vertex.Lerp(ref temp2, v1, v3, t);
+                lerpT = pv1 / dv1v3;
+                temp2.position.x = Mathf.Lerp(v1.position.x, v3.position.x, lerpT);
+                temp2.position.y = Mathf.Lerp(v1.position.y, v3.position.y, lerpT);
+                temp2.position.z = Mathf.Lerp(v1.position.z, v3.position.z, lerpT);
+                Vertex.Lerp(ref temp2, v1, v3, lerpT);
 
                 //画线或光栅化
                 Vertex temp3 = new Vertex();
@@ -832,22 +823,21 @@ namespace DrawTest3
 
                 return true;
             }
-
             else if (projectV1 > distance && projectV2 < distance && projectV3 < distance)//只有v1在内
             {
                 Vertex temp1 = new Vertex();
-                t = pv1 / dv1v2;
-                temp1.position.x = Mathf.Lerp(v1.position.x, v2.position.x, t);
-                temp1.position.y = Mathf.Lerp(v1.position.y, v2.position.y, t);
-                temp1.position.z = Mathf.Lerp(v1.position.z, v2.position.z, t);
-                Vertex.Lerp(ref temp1, v1, v2, t);
+                lerpT = pv1 / dv1v2;
+                temp1.position.x = Mathf.Lerp(v1.position.x, v2.position.x, lerpT);
+                temp1.position.y = Mathf.Lerp(v1.position.y, v2.position.y, lerpT);
+                temp1.position.z = Mathf.Lerp(v1.position.z, v2.position.z, lerpT);
+                Vertex.Lerp(ref temp1, v1, v2, lerpT);
 
                 Vertex temp2 = new Vertex();
-                t = pv1 / dv1v3;
-                temp2.position.x = Mathf.Lerp(v1.position.x, v3.position.x, t);
-                temp2.position.y = Mathf.Lerp(v1.position.y, v3.position.y, t);
-                temp2.position.z = Mathf.Lerp(v1.position.z, v3.position.z, t);
-                Vertex.Lerp(ref temp2, v1, v3, t);
+                lerpT = pv1 / dv1v3;
+                temp2.position.x = Mathf.Lerp(v1.position.x, v3.position.x, lerpT);
+                temp2.position.y = Mathf.Lerp(v1.position.y, v3.position.y, lerpT);
+                temp2.position.z = Mathf.Lerp(v1.position.z, v3.position.z, lerpT);
+                Vertex.Lerp(ref temp2, v1, v3, lerpT);
 
                 //画线或光栅化
                 surfacesQueue.Enqueue(new Surface(temp1, temp2, v1, startIndex + 1));
@@ -857,18 +847,18 @@ namespace DrawTest3
             else if (projectV1 < distance && projectV2 > distance && projectV3 < distance)//只有v2在内
             {
                 Vertex temp1 = new Vertex();
-                t = pv2 / dv2v3;
-                temp1.position.x = Mathf.Lerp(v2.position.x, v3.position.x, t);
-                temp1.position.y = Mathf.Lerp(v2.position.y, v3.position.y, t);
-                temp1.position.z = Mathf.Lerp(v2.position.z, v3.position.z, t);
-                Vertex.Lerp(ref temp1, v2, v3, t);
+                lerpT = pv2 / dv2v3;
+                temp1.position.x = Mathf.Lerp(v2.position.x, v3.position.x, lerpT);
+                temp1.position.y = Mathf.Lerp(v2.position.y, v3.position.y, lerpT);
+                temp1.position.z = Mathf.Lerp(v2.position.z, v3.position.z, lerpT);
+                Vertex.Lerp(ref temp1, v2, v3, lerpT);
 
                 Vertex temp2 = new Vertex();
-                t = pv2 / dv1v2;
-                temp2.position.x = Mathf.Lerp(v2.position.x, v1.position.x, t);
-                temp2.position.y = Mathf.Lerp(v2.position.y, v1.position.y, t);
-                temp2.position.z = Mathf.Lerp(v2.position.z, v1.position.z, t);
-                Vertex.Lerp(ref temp2, v2, v1, t);
+                lerpT = pv2 / dv1v2;
+                temp2.position.x = Mathf.Lerp(v2.position.x, v1.position.x, lerpT);
+                temp2.position.y = Mathf.Lerp(v2.position.y, v1.position.y, lerpT);
+                temp2.position.z = Mathf.Lerp(v2.position.z, v1.position.z, lerpT);
+                Vertex.Lerp(ref temp2, v2, v1, lerpT);
 
                 //画线或光栅化
                 surfacesQueue.Enqueue(new Surface(temp1, temp2, v2, startIndex + 1));
@@ -878,18 +868,18 @@ namespace DrawTest3
             else if (projectV1 < distance && projectV2 < distance && projectV3 > distance)//只有v3在内
             {
                 Vertex temp1 = new Vertex();
-                t = pv3 / dv1v3;
-                temp1.position.x = Mathf.Lerp(v3.position.x, v1.position.x, t);
-                temp1.position.y = Mathf.Lerp(v3.position.y, v1.position.y, t);
-                temp1.position.z = Mathf.Lerp(v3.position.z, v1.position.z, t);
-                Vertex.Lerp(ref temp1, v3, v1, t);
+                lerpT = pv3 / dv1v3;
+                temp1.position.x = Mathf.Lerp(v3.position.x, v1.position.x, lerpT);
+                temp1.position.y = Mathf.Lerp(v3.position.y, v1.position.y, lerpT);
+                temp1.position.z = Mathf.Lerp(v3.position.z, v1.position.z, lerpT);
+                Vertex.Lerp(ref temp1, v3, v1, lerpT);
 
                 Vertex temp2 = new Vertex();
-                t = pv3 / dv2v3;
-                temp2.position.x = Mathf.Lerp(v3.position.x, v2.position.x, t);
-                temp2.position.y = Mathf.Lerp(v3.position.y, v2.position.y, t);
-                temp2.position.z = Mathf.Lerp(v3.position.z, v2.position.z, t);
-                Vertex.Lerp(ref temp2, v3, v2, t);
+                lerpT = pv3 / dv2v3;
+                temp2.position.x = Mathf.Lerp(v3.position.x, v2.position.x, lerpT);
+                temp2.position.y = Mathf.Lerp(v3.position.y, v2.position.y, lerpT);
+                temp2.position.z = Mathf.Lerp(v3.position.z, v2.position.z, lerpT);
+                Vertex.Lerp(ref temp2, v3, v2, lerpT);
 
                 //画线或光栅化
                 surfacesQueue.Enqueue(new Surface(temp1, temp2, v3, startIndex + 1));
@@ -943,7 +933,7 @@ namespace DrawTest3
         {
             frameGraphics.Clear(System.Drawing.Color.Gray);
             Array.Clear(zBuffer, 0, zBuffer.Length);
-            surfacesQueue.Clear();
+            //surfacesQueue.Clear();
             surfacesList.Clear();
         }
 

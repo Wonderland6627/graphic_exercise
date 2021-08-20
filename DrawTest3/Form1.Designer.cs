@@ -48,6 +48,8 @@ namespace DrawTest3
             this.CameraPosLabel = new System.Windows.Forms.Label();
             this.CuttingBtn = new System.Windows.Forms.Button();
             this.FPSLabel = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // LeftBtn
@@ -216,11 +218,20 @@ namespace DrawTest3
             this.FPSLabel.TabIndex = 16;
             this.FPSLabel.Text = "FPS:";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(10, 40);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(600, 500);
+            this.pictureBox1.TabIndex = 17;
+            this.pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.FPSLabel);
             this.Controls.Add(this.CuttingBtn);
             this.Controls.Add(this.CameraPosLabel);
@@ -240,9 +251,9 @@ namespace DrawTest3
             this.Controls.Add(this.LeftBtn);
             this.DoubleBuffered = true;
             this.MaximumSize = new System.Drawing.Size(800, 600);
-            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -267,6 +278,7 @@ namespace DrawTest3
         private Label CameraPosLabel;
         private Button CuttingBtn;
         private Label FPSLabel;
+        private PictureBox pictureBox1;
     }
 }
 

@@ -1,9 +1,6 @@
 ﻿using DrawTest3.CustomMath;
 using DrawTest3.CustomTool;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DrawTest3.CustomData
 {
@@ -54,7 +51,7 @@ namespace DrawTest3.CustomData
 
         public void Move(Camera_Movement_Type direction)
         {
-            float speed = 0.2f;
+            float speed = 0.05f;
 
             if (direction == Camera_Movement_Type.Forward)
             {
@@ -97,8 +94,8 @@ namespace DrawTest3.CustomData
         /// </summary>
         public void UpdateCameraVectors(float pitch, float yaw)
         {
-            this.yaw += yaw * 0.01f;
-            this.pitch += pitch * 0.01f;
+            this.yaw += yaw * 0.005f;
+            this.pitch += pitch * 0.005f;
 
             if (this.pitch > 89.0f)
             {

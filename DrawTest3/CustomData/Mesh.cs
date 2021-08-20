@@ -1,8 +1,4 @@
 ﻿using DrawTest3.CustomMath;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DrawTest3.CustomData
 {
@@ -100,15 +96,15 @@ namespace DrawTest3.CustomData
             {
                 Vector3[] points =
                 {
-                    new Vector3(-1,  1, -1),
-                    new Vector3(-1, -1, -1),
-                    new Vector3(1, -1, -1),
-                    new Vector3(1, 1, -1),
+                    new Vector3(-0.5f,  0.5f, -0.5f),
+                    new Vector3(-0.5f, -0.5f, -0.5f),
+                    new Vector3(0.5f, -0.5f, -0.5f),
+                    new Vector3(0.5f, 0.5f, -0.5f),
 
-                    new Vector3( -1,  1, 1),
-                    new Vector3(-1, -1, 1),
-                    new Vector3(1, -1, 1),
-                    new Vector3(1, 1, 1),
+                    new Vector3( -0.5f,  0.5f, 0.5f),
+                    new Vector3(-0.5f, -0.5f, 0.5f),
+                    new Vector3(0.5f, -0.5f, 0.5f),
+                    new Vector3(0.5f, 0.5f, 0.5f),
                 };
 
                 int[] indexs =

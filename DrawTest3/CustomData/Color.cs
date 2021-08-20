@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DrawTest3.CustomData
 {
@@ -83,7 +79,7 @@ namespace DrawTest3.CustomData
             float r = this.R * 255f;
             float g = this.G * 255f;
             float b = this.B * 255f;
-            
+
             return System.Drawing.Color.FromArgb(Mathf.CeilToInt(r), Mathf.CeilToInt(g), Mathf.CeilToInt(b));
         }
 

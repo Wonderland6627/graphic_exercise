@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DrawTest3.CustomData;
+﻿using DrawTest3.CustomData;
 using DrawTest3.CustomMath;
-
+using System;
+using System.Collections.Generic;
 using Mathf = UnityEngine.Mathf;
 
 namespace DrawTest3.CustomTool

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DrawTest3.CustomMath
 {
@@ -116,7 +113,7 @@ namespace DrawTest3.CustomMath
 
             return v;
         }
-        
+
         public static Vector3 operator -(Vector3 lhs, Vector3 rhs)
         {
             Vector3 v = new Vector3();

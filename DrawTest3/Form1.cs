@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using DrawTest3.CustomData;
 using DrawTest3.CustomMath;
-using DrawTest3.CustomData;
-using System.Timers;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace DrawTest3
 {
@@ -25,7 +19,9 @@ namespace DrawTest3
             Graphics drawGraphic = CreateGraphics();
 
             device = new Device();
-            device.Init(MaximumSize, drawGraphic);
+            device.Init(Size, drawGraphic);
+
+            pictureBox1.Hide();
 
             RegistMouseEvent();
         }
@@ -37,10 +33,10 @@ namespace DrawTest3
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
 
-            device.OnUpdate += 
-                (fps) => 
-                { 
-                    FPSLabel.Text = string.Format("FPS: {0}",fps.ToString());
+            device.OnUpdate +=
+                (fps) =>
+                {
+                    FPSLabel.Text = string.Format("FPS: {0}", fps.ToString());
                 };
         }
 
@@ -152,7 +148,7 @@ namespace DrawTest3
 
             device.TurnLighting(out value);
 
-            LightBtn.Text = value ? "Lighting Off" :"Lighting On";
+            LightBtn.Text = value ? "Lighting Off" : "Lighting On";
         }
 
         private void CuttingBtn_Click(object sender, EventArgs e)
