@@ -105,5 +105,17 @@ namespace DrawTest1.CustomMath
 
             return v;
         }
+
+        public static Vector3 operator *(Matrix matrix, Vector3 vector)
+        {
+            Vector3 v = new Vector3();
+
+            v.x = vector.x * matrix[0, 0] + vector.y * matrix[0, 1] + vector.z * matrix[0, 2] + vector.w * matrix[0, 3];
+            v.y = vector.x * matrix[1, 0] + vector.y * matrix[1, 1] + vector.z * matrix[1, 2] + vector.w * matrix[1, 3];
+            v.z = vector.x * matrix[2, 0] + vector.y * matrix[2, 1] + vector.z * matrix[2, 2] + vector.w * matrix[2, 3];
+            v.w = vector.x * matrix[3, 0] + vector.y * matrix[3, 1] + vector.z * matrix[3, 2] + vector.w * matrix[3, 3];
+
+            return v;
+        }
     }
 }

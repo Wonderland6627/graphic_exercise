@@ -46,7 +46,7 @@ namespace DrawTest1
             // 
             // rendererPanel
             // 
-            this.rendererPanel.Location = new System.Drawing.Point(28, 56);
+            this.rendererPanel.Location = new System.Drawing.Point(38, 58);
             this.rendererPanel.Name = "rendererPanel";
             this.rendererPanel.Size = new System.Drawing.Size(652, 382);
             this.rendererPanel.TabIndex = 2;
@@ -54,7 +54,7 @@ namespace DrawTest1
             // 
             // leftMoveBtn
             // 
-            this.leftMoveBtn.Location = new System.Drawing.Point(624, 12);
+            this.leftMoveBtn.Location = new System.Drawing.Point(625, 12);
             this.leftMoveBtn.Name = "leftMoveBtn";
             this.leftMoveBtn.Size = new System.Drawing.Size(39, 23);
             this.leftMoveBtn.TabIndex = 3;

@@ -138,6 +138,68 @@ namespace DrawTest1.CustomMath
             return matrix;
         }
 
+        public static Matrix Translate(float x, float y, float z)
+        {
+            var matrix = Identity;
+
+            matrix[0, 0] = x;
+            matrix[0, 1] = y;
+            matrix[0, 2] = z;
+
+            return matrix;
+        }
+
+        /// <summary>
+        /// 绕x轴旋转
+        /// </summary>
+        /// <param name="angle">角度</param>
+        /// <returns></returns>
+        public static Matrix RotateX(float angle)
+        {
+            Matrix m = Identity;
+
+            m[1, 1] = (float)Math.Cos(angle);
+            m[1, 2] = -(float)Math.Sin(angle);
+            m[2, 1] = (float)Math.Sin(angle);
+            m[2, 2] = (float)Math.Cos(angle);
+
+            return m;
+        }
+
+        /// <summary>
+        /// 绕y轴旋转
+        /// </summary>
+        /// <param name="angle">角度</param>
+        /// <returns></returns>
+        public static Matrix RotateY(float angle)
+        {
+            Matrix m = Identity;
+
+            m[0, 0] = (float)Math.Cos(angle);
+            m[0, 2] = (float)Math.Sin(angle);
+            m[2, 0] = -(float)Math.Sin(angle);
+            m[2, 2] = (float)Math.Cos(angle);
+
+            return m;
+        }
+
+        /// <summary>
+        /// 绕z轴旋转
+        /// </summary>
+        /// <param name="angle">角度</param>
+        /// <returns></returns>
+        public static Matrix RotateZ(float angle)
+        {
+            Matrix m = Identity;
+
+            m[0, 0] = (float)Math.Cos(angle);
+            m[0, 1] = -(float)Math.Sin(angle);
+            m[1, 0] = (float)Math.Sin(angle);
+            m[1, 1] = (float)Math.Cos(angle);
+
+            return m;
+        }
+
         public static Matrix operator *(Matrix a, Matrix b)
         {
             float[,] multi = new float[a.rows, b.columns];
